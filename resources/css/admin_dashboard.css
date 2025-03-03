@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hiệu ứng hover phát sáng */
+.dashboard-item {
+    transition: all 0.3s ease-in-out;
+    border-radius: 0.375rem; /* Bo góc */
+    padding: 0.75rem; /* Giữ khoảng cách nội dung */
+}
+
+.dashboard-item:hover {
+    background-color: rgba(0, 0, 0, 0.05); /* Màu sáng nhẹ */
+    transform: scale(1.02); /* Phóng to nhẹ */
+    color: #1D4ED8;
+}
+
+/* Đảm bảo không có vùng đen thừa */
+.dashboard-item:hover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: transparent;
+}
