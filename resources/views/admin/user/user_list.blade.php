@@ -6,7 +6,12 @@
     <div class="container mx-auto p-6">
         <h2 class="text-2xl font-semibold mb-4">Danh sách người dùng</h2>
 
-        @if (session('success'))
+        <a href="{{ route('admin_user_add') }}" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">
+            + Thêm Người Dùng
+        </a>
+
+
+    @if (session('success'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg">
                 {{ session('success') }}
             </div>
@@ -39,13 +44,17 @@
                         <td class="px-4 py-2 capitalize">{{ $user->role }}</td>
                         <td class="px-4 py-2">{{ date('d/m/Y', strtotime($user->created_at)) }}</td>
                         <td class="px-4 py-2">
-                            <a href="#" class="bg-blue-500 text-white px-2 py-1 rounded">Chi tiết</a>
+                            <a href="{{ route('admin_user_detail', ['id' => $user->user_id]) }}" class="bg-blue-500 text-white px-2 py-1 rounded">Chi tiết</a>
                             <a href="#" class="bg-red-500 text-white px-2 py-1 rounded">Xóa</a>
                         </td>
                     </tr>
                 @endforeach
                 </tbody>
             </table>
+        </div>
+        <!-- Thanh phân trang -->
+        <div class="mt-4 mb-4 flex justify-center">
+            {{ $users->links('vendor.pagination.tailwind') }}
         </div>
     </div>
 @endsection

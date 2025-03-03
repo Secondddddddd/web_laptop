@@ -36,5 +36,10 @@
             </tbody>
         </table>
 
+        <!-- Thanh phân trang -->
+        <div class="mt-4 mb-4 flex justify-center">
+            {{ $categories->links('vendor.pagination.tailwind') }}
+        </div>
+
     </div>
 @endsection

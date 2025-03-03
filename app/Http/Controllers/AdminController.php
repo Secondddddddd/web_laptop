@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 use App\Models\Product;
 use App\Models\Category;
@@ -20,15 +21,13 @@ class AdminController extends Controller
 
     function product_list()
     {
-        // Lấy toàn bộ danh sách sản phẩm và load quan hệ category, supplier
-        $products = Product::with(['category', 'supplier'])->get();
-
-        return view('admin.product.product_list',['products'=>$products]);
+        $products = Product::with(['category', 'supplier'])->paginate(10); // Hiển thị 10 sản phẩm mỗi trang
+        return view('admin.product.product_list', compact('products'));
     }
 
     function category_list()
     {
-        $categories = Category::all(); // Lấy toàn bộ danh mục từ database
+        $categories = Category::paginate(10); // Lấy toàn bộ danh mục từ database
         return view('admin.category.category_list', ['categories'=>$categories]);
     }
 
@@ -253,7 +252,54 @@ class AdminController extends Controller
 
     public function userList()
     {
-        $users = User::select('user_id', 'full_name', 'email', 'phone', 'role', 'avatar', 'created_at')->get();
+        $users = User::select('user_id', 'full_name', 'email', 'phone', 'role', 'avatar', 'created_at')->paginate(10);
         return view('admin.user.user_list', compact('users'));
     }
+
+    public function userDetail($id)
+    {
+        $user = User::where('user_id', $id)->firstOrFail();
+        return view('admin.user.user_detail', compact('user'));
+    }
+
+    public function showAddUserForm()
+    {
+        return view('admin.user.user_add');
+    }
+
+
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'full_name' => 'required|string|max:100',
+            'email' => 'required|email|unique:users,email|max:100',
+            'password' => 'required|min:6',
+            'phone' => 'nullable|string|max:15',
+            'address' => 'nullable|string',
+            'role' => 'required|in:customer,admin,staff',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        // Xử lý avatar
+        if ($request->hasFile('avatar')) {
+            $avatarName = time() . '.' . $request->avatar->extension();
+            $request->avatar->move(public_path('avatar'), $avatarName);
+        } else {
+            $avatarName = 'avatar_default.jpg';
+        }
+
+        // Tạo user
+        User::create([
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'role' => $request->role,
+            'avatar' => $avatarName
+        ]);
+
+        return redirect()->route('admin_user_list')->with('success', 'Thêm người dùng thành công!');
+    }
+
 }

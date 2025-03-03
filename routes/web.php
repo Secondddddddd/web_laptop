@@ -22,5 +22,8 @@ Route::prefix('admin')->group(function () {
     Route::put('/category/{id}', [AdminController::class, 'updateCategory'])->name('admin_category_update');
     Route::delete('/category/{id}', [AdminController::class, 'destroyCategory'])->name('admin_category_delete');
     Route::get('/users', [AdminController::class, 'userList'])->name('admin_user_list');
+    Route::get('/users/{id}', [AdminController::class, 'userDetail'])->name('admin_user_detail');
+    Route::get('/users/add', [AdminController::class, 'showAddUserForm'])->name('admin_user_add');
+    Route::post('/users/store', [AdminController::class, 'storeUser'])->name('admin_user_store');
 
 });

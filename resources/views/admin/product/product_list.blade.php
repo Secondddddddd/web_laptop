@@ -6,6 +6,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-5">
         <h1 class="text-2xl font-bold text-gray-800 mb-4">Danh sách sản phẩm</h1>
         <button class="btn btn-outline btn-primary add-product-btn mb-4">Thêm sản phẩm mới</button>
+
         <div class="overflow-x-auto">
             <table class="w-full bg-white border border-gray-300 rounded-lg shadow-md">
                 <thead>
@@ -23,7 +24,7 @@
                 <tbody>
                 @foreach ($products as $product)
                     <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-3 border-b">{{ $loop->iteration }}</td>
+                        <td class="px-4 py-3 border-b">{{ $loop->iteration + ($products->currentPage() - 1) * $products->perPage() }}</td>
                         <td class="px-4 py-3 border-b font-semibold">{{ $product->name }}</td>
                         <td class="px-4 py-3 border-b text-green-600 font-bold">{{ number_format($product->price, 2) }} đ</td>
                         <td class="px-4 py-3 border-b text-center">{{ $product->stock_quantity }}</td>
@@ -42,11 +43,15 @@
                                 </form>
                             </div>
                         </td>
-
                     </tr>
                 @endforeach
                 </tbody>
             </table>
+        </div>
+
+        <!-- Thanh Phân Trang -->
+        <div class="mb-4 mt-4 flex justify-center">
+            {{ $products->links('vendor.pagination.tailwind') }}
         </div>
     </div>
 @endsection

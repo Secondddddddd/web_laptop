@@ -1,0 +1,43 @@
+@extends('admin.admin_dashboard')
+
+@section('title', 'Thông tin người dùng')
+
+@section('content')
+    <div class="container mx-auto p-6">
+        <h2 class="text-2xl font-semibold mb-4">Thông tin người dùng</h2>
+
+        <div class="bg-white shadow-md rounded-lg p-6 max-w-3xl mx-auto">
+            <div class="flex items-center space-x-4 mb-6">
+                <img src="{{ asset('avatar/' . $user->avatar) }}" alt="Avatar" class="w-24 h-24 rounded-full">
+                <div>
+                    <h3 class="text-xl font-semibold">{{ $user->full_name }}</h3>
+                    <p class="text-gray-600">{{ ucfirst($user->role) }}</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <p class="font-semibold">Email:</p>
+                    <p class="text-gray-700">{{ $user->email }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Số điện thoại:</p>
+                    <p class="text-gray-700">{{ $user->phone ?? 'N/A' }}</p>
+                </div>
+                <div class="col-span-2">
+                    <p class="font-semibold">Địa chỉ:</p>
+                    <p class="text-gray-700">{{ $user->address ?? 'Chưa cập nhật' }}</p>
+                </div>
+                <div>
+                    <p class="font-semibold">Ngày tạo tài khoản:</p>
+                    <p class="text-gray-700">{{ date('d/m/Y', strtotime($user->created_at)) }}</p>
+                </div>
+            </div>
+
+            <div class="mt-6 flex space-x-2">
+                <a href="{{ route('admin_user_list') }}" class="bg-gray-500 px-4 py-2 rounded">Quay lại</a>
+                <a href="#" class="bg-red-500 text-white px-4 py-2 rounded">Xóa tài khoản</a>
+            </div>
+        </div>
+    </div>
+@endsection
