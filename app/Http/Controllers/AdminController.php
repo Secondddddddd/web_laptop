@@ -9,6 +9,8 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\User;
+use Illuminate\Support\Facades\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 class AdminController extends Controller
@@ -264,6 +266,7 @@ class AdminController extends Controller
 
     public function showAddUserForm()
     {
+        // Debug
         return view('admin.user.user_add');
     }
 
@@ -299,7 +302,68 @@ class AdminController extends Controller
             'avatar' => $avatarName
         ]);
 
-        return redirect()->route('admin_user_list')->with('success', 'Thêm người dùng thành công!');
+        return redirect()->route('admin_user_add')->with('success', 'Thêm người dùng thành công!');
+    }
+
+    public function disableUser($id)
+    {
+        try {
+            $user = User::where('user_id', $id)->firstOrFail();
+            $user->update(['status' => 'inactive']);
+
+            return redirect()->route('admin_user_list')->with('success', 'Tài khoản đã bị vô hiệu hóa!');
+        } catch (\Exception $e) {
+            Log::error('Lỗi khi vô hiệu hóa tài khoản', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Vô hiệu hóa tài khoản thất bại! Vui lòng thử lại.');
+        }
+    }
+
+    public function editUser($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.user.user_edit', compact('user'));
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $request->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $id . ',user_id',
+            'phone' => 'nullable|string|max:15',
+            'address' => 'nullable|string',
+            'role' => 'required|in:customer,admin,staff',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ], [
+            'full_name.required' => 'Vui lòng nhập họ và tên.',
+            'email.required' => 'Vui lòng nhập email.',
+            'email.unique' => 'Email đã tồn tại.',
+            'role.required' => 'Vui lòng chọn vai trò.',
+        ]);
+
+        try {
+            $user = User::findOrFail($id);
+
+            // Cập nhật ảnh đại diện nếu có tải lên
+            if ($request->hasFile('avatar')) {
+                $avatarName = time() . '.' . $request->avatar->extension();
+                $request->avatar->move(public_path('avatar'), $avatarName);
+                $user->avatar = $avatarName;
+            }
+
+            // Cập nhật thông tin người dùng
+            $user->update([
+                'full_name' => $request->full_name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'address' => $request->address,
+                'role' => $request->role,
+            ]);
+
+            return redirect()->route('admin_user_edit',['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công!');
+        } catch (\Exception $e) {
+            Log::error('Lỗi khi cập nhật thông tin user', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Cập nhật thất bại! Vui lòng thử lại.');
+        }
     }
 
 }

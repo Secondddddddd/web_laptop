@@ -2,47 +2,42 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // Đặt khóa chính là user_id thay vì id
+    protected $primaryKey = 'user_id';
+
+    // Tắt timestamps vì bảng chỉ có created_at, không có updated_at
+    public $timestamps = false;
+
+    // Các cột có thể gán giá trị hàng loạt (Mass Assignment)
     protected $fillable = [
-        'name',
+        'full_name',
+        'avatar',
         'email',
         'password',
+        'phone',
+        'address',
+        'role',
+        'created_at',
+        'status',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    // Ẩn các trường không muốn trả về khi query
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    // Kiểu dữ liệu của các cột
+    protected $casts = [
+        'password' => 'hashed', // Laravel 10 hỗ trợ hash password tự động
+        'created_at' => 'datetime',
+    ];
 }

@@ -8,10 +8,15 @@
 
         <div class="bg-white shadow-md rounded-lg p-6 max-w-3xl mx-auto">
             <div class="flex items-center space-x-4 mb-6">
-                <img src="{{ asset('avatar/' . $user->avatar) }}" alt="Avatar" class="w-24 h-24 rounded-full">
+                <img src="{{ asset('avatar/' . $user->avatar) }}" alt="Avatar" class="w-24 h-24 rounded-full border border-gray-300">
                 <div>
                     <h3 class="text-xl font-semibold">{{ $user->full_name }}</h3>
                     <p class="text-gray-600">{{ ucfirst($user->role) }}</p>
+                    <p class="mt-1">
+                        <span class="px-3 py-1 rounded-lg text-white {{ $user->status === 'inactive' ? 'bg-red-500' : 'bg-green-500' }}">
+                            {{ $user->status === 'inactive' ? 'Đã vô hiệu hóa' : 'Đang hoạt động' }}
+                        </span>
+                    </p>
                 </div>
             </div>
 
@@ -35,8 +40,7 @@
             </div>
 
             <div class="mt-6 flex space-x-2">
-                <a href="{{ route('admin_user_list') }}" class="bg-gray-500 px-4 py-2 rounded">Quay lại</a>
-                <a href="#" class="bg-red-500 text-white px-4 py-2 rounded">Xóa tài khoản</a>
+                <a href="{{ route('admin_user_list') }}" class="bg-gray-500 px-4 py-2 rounded text-white">Quay lại</a>
             </div>
         </div>
     </div>
