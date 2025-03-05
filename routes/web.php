@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('home_page');
-});
+})->name('home');
 
 Route::prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin_dashboard');
@@ -30,3 +31,13 @@ Route::prefix('admin')->group(function () {
     Route::post('/users/{id}/update', [AdminController::class, 'updateUser'])->name('admin_user_update');
 
 });
+
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login_submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register_submit');
+Route::get('/forgot-password', [AuthController::class, 'showForm'])->name('password.request');
+Route::post('/forgot-password', [AuthController::class, 'verifyEmail'])->name('password.verify');
+Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
