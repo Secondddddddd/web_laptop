@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return view('home_page');
@@ -41,3 +42,5 @@ Route::get('/forgot-password', [AuthController::class, 'showForm'])->name('passw
 Route::post('/forgot-password', [AuthController::class, 'verifyEmail'])->name('password.verify');
 Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
+Route::get('/laptops', [ProductController::class, 'laptopList'])->name('laptops');
+Route::get('/accessories', [ProductController::class, 'accessories'])->name('accessories');

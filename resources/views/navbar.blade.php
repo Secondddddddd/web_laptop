@@ -11,23 +11,17 @@
 
             <!-- Menu (Căn giữa) -->
             <div class="flex-1 flex justify-center items-center space-x-8">
-                <a href="#" class="text-gray-700 hover:text-blue-600">Trang chủ</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600">Sản phẩm</a>
-                <a href="#" class="text-gray-700 hover:text-blue-600">Phụ kiện</a>
+                <a href="/" class="text-gray-700 hover:text-blue-600">Trang chủ</a>
+                <a href="{{route('laptops')}}" class="text-gray-700 hover:text-blue-600">Laptop</a>
+                <a href="{{route('accessories')}}" class="text-gray-700 hover:text-blue-600">Phụ kiện</a>
                 <a href="#" class="text-gray-700 hover:text-blue-600">Liên hệ</a>
-            </div>
-
-            <!-- Thanh tìm kiếm -->
-            <div class="relative flex items-center">
-                <input type="text" placeholder="Tìm kiếm..." class="border rounded-lg px-3 py-2">
-                <button class="absolute right-2 top-2 text-gray-500">🔍</button>
             </div>
 
             <!-- Giỏ hàng & Tài khoản -->
             <div class="flex items-center space-x-4 ml-4">
                 <!-- Giỏ hàng -->
                 <a href="#" class="relative">
-                    🛒 <span class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 rounded-full">3</span>
+                    🛒 <span class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 rounded-full">0</span>
                 </a>
 
                 <!-- Tài khoản -->

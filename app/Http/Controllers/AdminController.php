@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\User;
+use App\Models\Order;
 
 
 
@@ -17,7 +18,35 @@ class AdminController extends Controller
     //
     function index()
     {
-        return view('admin.admin');
+        $userCount = User::count();
+
+        // Tính tổng số lượng sản phẩm thay vì chỉ đếm số loại sản phẩm
+        $productCount = Product::sum('stock_quantity');
+
+        $supplierCount = Supplier::count();
+        $completedOrders = Order::where('order_status', 'delivered')->count();
+
+        // Lấy doanh thu theo ngày trong tháng
+        $monthlyRevenue = Order::where('order_status', 'delivered')
+            ->whereMonth('created_at', now()->month)
+            ->get()
+            ->groupBy(function ($order) {
+                return $order->created_at->format('d/m');
+            })
+            ->map(function ($orders) {
+                return [
+                    'orders' => $orders->count(),
+                    'revenue' => $orders->sum('total_price')
+                ];
+            });
+
+        return view('admin.admin', compact(
+            'userCount',
+            'productCount', // Giờ đã là tổng số lượng sản phẩm
+            'supplierCount',
+            'completedOrders',
+            'monthlyRevenue'
+        ));
     }
 
     function product_list()
