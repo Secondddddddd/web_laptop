@@ -4,6 +4,9 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/', function () {
     return view('home_page');
@@ -44,3 +47,7 @@ Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('p
 Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
 Route::get('/laptops', [ProductController::class, 'laptopList'])->name('laptops');
 Route::get('/accessories', [ProductController::class, 'accessories'])->name('accessories');
+Route::get('/products/{product_id}/{product_slug}', [ProductController::class, 'showProductDetail'])->name('product.detail');
+Route::post('/cart/add/{product_id}', [CartController::class, 'addToCart'])->name('cart.add');
+Route::post('/order/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
+Route::post('/products/{product_id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');

@@ -23,17 +23,7 @@
     <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Đăng ký</h2>
 
-        @if(session('success'))
-            <div class="bg-green-100 text-green-600 p-3 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if($errors->any())
-            <div class="bg-red-100 text-red-600 p-3 rounded mb-4">
-                {{ $errors->first() }}
-            </div>
-        @endif
+        <x-alert-result />
 
         <form action="{{ route('register_submit') }}" method="POST" enctype="multipart/form-data">
             @csrf

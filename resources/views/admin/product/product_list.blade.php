@@ -7,6 +7,8 @@
         <h1 class="text-2xl font-bold text-gray-800 mb-4">Danh sách sản phẩm</h1>
         <button class="btn btn-outline btn-primary add-product-btn mb-4">Thêm sản phẩm mới</button>
 
+        <x-alert-result />
+
         <div class="overflow-x-auto">
             <table class="w-full bg-white border border-gray-300 rounded-lg shadow-md">
                 <thead>

@@ -14,8 +14,6 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    // Xử lý đăng nhập
-    // Xử lý đăng nhập
     public function login(Request $request)
     {
         $request->validate([
@@ -23,17 +21,20 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        // Kiểm tra nếu có URL trước đó thì lưu lại (chỉ lưu nếu nó không phải trang login)
+        if (!session()->has('url.intended') && url()->previous() !== route('login')) {
+            session(['url.intended' => url()->previous()]);
+        }
 
-        if ($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            $user = Auth::user();
 
-            // Điều hướng theo vai trò
             switch ($user->role) {
                 case 'admin':
                     return redirect()->route('admin_dashboard')->with('success', 'Đăng nhập thành công!');
                 case 'customer':
-                    return redirect('/')->with('success', 'Chào mừng bạn trở lại!');
+                    // Chuyển hướng về trang trước đó hoặc trang chủ nếu không có URL trước
+                    return redirect(session()->pull('url.intended', '/'))->with('success', 'Chào mừng bạn trở lại!');
                 case 'staff':
                     return redirect()->route('admin_product_list')->with('success', 'Chào mừng nhân viên!');
                 default:
@@ -45,11 +46,15 @@ class AuthController extends Controller
         return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng']);
     }
 
+
+
+
     // Đăng xuất
     public function logout(Request $request)
     {
         Auth::logout();
-        return redirect()->route('login')->with('success', 'Bạn đã đăng xuất.');
+
+        return redirect()->back()->with('success', 'Bạn đã đăng xuất.');
     }
 
     public function showRegisterForm()

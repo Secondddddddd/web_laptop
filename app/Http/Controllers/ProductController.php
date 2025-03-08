@@ -2,8 +2,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Review;
 
 class ProductController extends Controller
 {
@@ -43,4 +46,23 @@ public function laptopList(Request $request)
         return view('products.accessories', compact('products'));
     }
 
+    public function showProductDetail($product_id, $product_slug)
+    {
+        // Lấy sản phẩm theo ID và kèm theo reviews + user
+        $product = Product::with('reviews.user')->findOrFail($product_id);
+
+        // Tạo slug chính xác từ tên sản phẩm
+        $correctSlug = Str::slug($product->name);
+
+        // Nếu slug không khớp, điều hướng đến URL đúng
+        if ($product_slug !== $correctSlug) {
+            return redirect()->route('product.detail', [
+                'product_id' => $product->product_id,
+                'product_slug' => $correctSlug
+            ], 301); // 301: Permanent Redirect
+        }
+
+        // Hiển thị trang chi tiết sản phẩm
+        return view('products.product_detail', compact('product'));
+    }
 }

@@ -48,8 +48,8 @@
                     <!-- Khi chưa đăng nhập -->
                     <div class="flex items-center space-x-2">
                         <img src="{{ asset('avatar/avatar_default.jpg') }}" alt="Avatar" class="w-8 h-8 rounded-full">
-                        <span class="text-gray-700">Khách</span>
-                        <a href="{{ route('login') }}" class="text-blue-600 ml-2">Đăng nhập</a>
+                        <span class="text-gray-700 mr-5">Khách</span>
+                        <a href="{{ route('login') }}" class="text-blue-600 ml-5">Đăng nhập</a>
                         /
                         <a href="{{ route('register') }}" class="text-blue-600">Đăng ký</a>
                     </div>

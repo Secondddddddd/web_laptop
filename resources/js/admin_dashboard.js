@@ -38,12 +38,3 @@ document.addEventListener("DOMContentLoaded", ()=>{
         });
     }
 });
-
-function closeAlert(alertId) {
-    document.getElementById(alertId).style.display = 'none';
-}
-
-// Tự động ẩn sau 5 giây
-setTimeout(() => {
-    document.querySelectorAll('.alert').forEach(alert => alert.style.display = 'none');
-}, 5000);

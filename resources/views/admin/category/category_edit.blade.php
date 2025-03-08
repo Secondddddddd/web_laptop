@@ -6,17 +6,7 @@
     <div class="container mx-auto p-6">
         <h2 class="text-2xl font-semibold mb-4">Chỉnh sửa thể loại</h2>
 
-        @if (session('success'))
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 rounded-lg">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg">
-                {{ session('error') }}
-            </div>
-        @endif
+        <x-alert-result />
 
         <form action="{{ route('admin_category_update', ['id' => $category->category_id]) }}" method="POST">
             @csrf

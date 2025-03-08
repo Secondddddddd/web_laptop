@@ -29,4 +29,10 @@ class Product extends Model
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
+
+    // Quan hệ 1-n: Một sản phẩm có nhiều đánh giá
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id', 'product_id');
+    }
 }

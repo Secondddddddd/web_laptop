@@ -6,6 +6,9 @@
 
     <div class="container">
         <h2 class="mb-4">Category List</h2>
+
+        <x-alert-result />
+
         <a href="{{ route('admin_category_add') }}" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">
             Thêm Thể Loại
         </a>

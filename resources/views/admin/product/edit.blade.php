@@ -7,17 +7,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-5">
         <h1 class="text-2xl font-bold text-gray-800 mb-4">Chỉnh sửa sản phẩm</h1>
 
-        @if (session('success'))
-            <div class="alert alert-success p-4 mb-4 rounded-lg bg-green-100 border border-green-400 text-green-700">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger p-4 mb-4 rounded-lg bg-red-100 border border-red-400 text-red-700">
-                {{ session('error') }}
-            </div>
-        @endif
+        <x-alert-result />
 
 
         {{-- Form chỉnh sửa sản phẩm --}}

@@ -8,17 +8,7 @@
     <div class="container mx-auto px-4 mt-5">
         <h1 class="text-2xl font-bold text-gray-800 mb-4">Thêm thể loại mới</h1>
 
-        @if (session('success'))
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 alert">
-                <p>{{ session('success') }}</p>
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 alert">
-                <p>{{ session('error') }}</p>
-            </div>
-        @endif
+        <x-alert-result />
 
         <form action="{{ route('admin_category_store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md">
             @csrf

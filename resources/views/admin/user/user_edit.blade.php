@@ -7,17 +7,7 @@
 
         <h2 class="text-2xl font-semibold mb-4">Chỉnh sửa thông tin người dùng</h2>
 
-        @if (session('success'))
-            <div class="alert alert-success p-4 mb-4 rounded-lg bg-green-100 border border-green-400 text-green-700">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="alert alert-danger p-4 mb-4 rounded-lg bg-red-100 border border-red-400 text-red-700">
-                {{ session('error') }}
-            </div>
-        @endif
+        <x-alert-result />
 
         <form action="{{ route('admin_user_update', ['id' => $user->user_id]) }}" method="POST" enctype="multipart/form-data">
             @csrf
