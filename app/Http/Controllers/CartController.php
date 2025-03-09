@@ -46,22 +46,36 @@ class CartController extends Controller
     public function viewCart()
     {
         $cart = session()->get('cart', []);
+
+        // Lấy danh sách product_id từ cart
+        $productIds = array_keys($cart);
+
+        // Lấy danh sách sản phẩm và số lượng tồn kho
+        $products = Product::whereIn('product_id', $productIds)->get()->keyBy('product_id');
+
+        // Thêm số lượng tồn kho vào giỏ hàng
+        foreach ($cart as $id => &$item) {
+            if (isset($products[$id])) {
+                $item['stock_quantity'] = $products[$id]->stock_quantity;
+            } else {
+                $item['stock_quantity'] = 0; // Nếu sản phẩm không tồn tại, giả sử hết hàng
+            }
+        }
+
         return view('cart.cart', compact('cart'));
     }
 
-    public function removeFromCart($id, Request $request)
+
+    public function removeFromCart($id)
     {
         $cart = session()->get('cart', []);
-        unset($cart[$id]);
-        session()->put('cart', $cart);
-
-        if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Đã xóa sản phẩm khỏi giỏ hàng.', 'totalQuantity' => array_sum(array_column($cart, 'quantity'))]);
+        if (isset($cart[$id])) {
+            unset($cart[$id]);
+            session()->put('cart', $cart);
         }
 
-        return back()->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng.');
+        return back()->with('success', 'Sản phẩm đã bị xóa khỏi giỏ hàng.');
     }
-
 
 
 }

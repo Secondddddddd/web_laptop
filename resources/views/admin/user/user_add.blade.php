@@ -47,10 +47,6 @@
                 <input type="text" name="phone" class="w-full border rounded p-2">
             </div>
 
-            <div class="mb-4">
-                <label class="block font-semibold">Địa chỉ:</label>
-                <textarea name="address" class="w-full border rounded p-2"></textarea>
-            </div>
 
             <div class="mb-4">
                 <label class="block font-semibold">Vai trò:</label>

@@ -62,5 +62,7 @@ Route::prefix('/cart')->group(function () {
         $cart = session()->get('cart', []);
         return response()->json(['totalQuantity' => array_sum(array_column($cart, 'quantity'))]);
     });
+    Route::post('/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+
 });
 

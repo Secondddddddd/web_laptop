@@ -64,7 +64,6 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users,email|max:100',
             'password' => 'required|min:6|confirmed',
             'phone' => 'nullable|string|max:15',
-            'address' => 'nullable|string',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
@@ -82,7 +81,6 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
-            'address' => $request->address,
             'role' => 'customer',
             'avatar' => $avatarName
         ]);

@@ -3,6 +3,7 @@
 @section('title', $product->name)
 
 @section('content')
+    @vite(['resources/js/product_detail.js'])
 
     <x-alert-result />
 
@@ -35,13 +36,15 @@
                         @auth
                             <form action="{{ route('reviews.store', $product->product_id) }}" method="POST" class="flex flex-col items-start mt-3">
                                 @csrf
-                                <x-rating name="rating-9" selectedRating="{{ $product->reviews->avg('rating') }}"/>
+                                <x-rating name="rating" selectedRating="{{ $product->reviews->avg('rating') }}"/>
                                 <button type="submit" class="btn btn-primary mt-2">Gửi đánh giá</button>
                             </form>
+                            <span class="ml-2 text-gray-600">({{ $product->reviews->count() }} đánh giá)</span>
                         @else
                             <!-- Hiển thị thông báo nếu chưa đăng nhập -->
                             <div class="mt-3 text-red-500">
                                 <x-rating name="rating-9" selectedRating="{{ $product->reviews->avg('rating') }}"/>
+                                <span class="ml-2 text-gray-600">({{ $product->reviews->count() }} đánh giá)</span>
                                 <p class="mt-2">Bạn cần <a href="{{ route('login') }}" class="text-blue-500 underline">đăng nhập</a> để đánh giá sản phẩm.</p>
                             </div>
                         @endauth
@@ -53,9 +56,9 @@
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->product_id }}">
                             <div class="flex items-center border rounded-md w-48">
-                                <button type="button" class="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-l-md">-</button>
-                                <input type="number" name="quantity" class="text-center w-full border-x outline-none" min="0" max="{{$product->quantity }}" value="1"/>
-                                <button type="button" class="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-r-md">+</button>
+                                <button type="button" class="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-l-md" id="btn-decrease">-</button>
+                                <input type="number" name="quantity" id="quantity-product" class="text-center w-full border-x outline-none" min="0" max="{{$product->quantity }}" value="1"/>
+                                <button type="button" class="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-r-md" id="btn-increase">+</button>
                             </div>
                             <button type="submit" class="btn btn-primary w-48">Thêm vào giỏ hàng</button>
                         </form>

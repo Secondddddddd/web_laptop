@@ -34,10 +34,6 @@
                     <input type="text" name="phone" value="{{ old('phone', $user->phone) }}" class="border p-2 w-full">
                 </div>
 
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-semibold mb-2">Địa chỉ</label>
-                    <textarea name="address" class="border p-2 w-full">{{ old('address', $user->address) }}</textarea>
-                </div>
 
                 <div class="mb-4">
                     <label class="block text-gray-700 font-semibold mb-2">Vai trò</label>

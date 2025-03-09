@@ -29,10 +29,6 @@
                     <p class="font-semibold">Số điện thoại:</p>
                     <p class="text-gray-700">{{ $user->phone ?? 'N/A' }}</p>
                 </div>
-                <div class="col-span-2">
-                    <p class="font-semibold">Địa chỉ:</p>
-                    <p class="text-gray-700">{{ $user->address ?? 'Chưa cập nhật' }}</p>
-                </div>
                 <div>
                     <p class="font-semibold">Ngày tạo tài khoản:</p>
                     <p class="text-gray-700">{{ date('d/m/Y', strtotime($user->created_at)) }}</p>

@@ -306,7 +306,6 @@ class AdminController extends Controller
             'email' => 'required|email|unique:users,email|max:100',
             'password' => 'required|min:6',
             'phone' => 'nullable|string|max:15',
-            'address' => 'nullable|string',
             'role' => 'required|in:customer,admin,staff',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -325,7 +324,6 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
-            'address' => $request->address,
             'role' => $request->role,
             'avatar' => $avatarName
         ]);
@@ -358,7 +356,6 @@ class AdminController extends Controller
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $id . ',user_id',
             'phone' => 'nullable|string|max:15',
-            'address' => 'nullable|string',
             'role' => 'required|in:customer,admin,staff',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ], [
@@ -383,7 +380,6 @@ class AdminController extends Controller
                 'full_name' => $request->full_name,
                 'email' => $request->email,
                 'phone' => $request->phone,
-                'address' => $request->address,
                 'role' => $request->role,
             ]);
 

@@ -58,10 +58,6 @@
                 <input type="text" name="phone" class="w-full p-3 border rounded" placeholder="Nhập số điện thoại (tùy chọn)">
             </div>
 
-            <div class="mb-4">
-                <label class="block text-gray-600 mb-1">Địa chỉ</label>
-                <textarea name="address" class="w-full p-3 border rounded" placeholder="Nhập địa chỉ (tùy chọn)"></textarea>
-            </div>
 
             <div class="mb-4">
                 <label class="block text-gray-600 mb-1">Ảnh đại diện (tùy chọn)</label>

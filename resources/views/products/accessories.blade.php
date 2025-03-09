@@ -24,7 +24,9 @@
 
                     <h3 class="text-lg font-bold text-center">{{ $product->name }}</h3>
                     <p class="text-gray-600 text-center">Giá: {{ number_format($product->price, 0, ',', '.') }} VNĐ</p>
-                    <a href="#" class="text-blue-500 mt-2 block">Xem chi tiết</a>
+                    <a href="
+                    {{ route('product.detail', ['product_id' => $product->product_id, 'product_slug' => Str::slug($product->name)]) }}
+                    " class="text-blue-500 mt-2 block">Xem chi tiết</a>
                 </div>
             @empty
                 <p class="col-span-6 text-gray-500 text-center">Không có phụ kiện nào.</p>
