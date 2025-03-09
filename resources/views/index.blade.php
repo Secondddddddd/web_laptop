@@ -7,6 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <!-- Thêm favicon -->
     <link rel="icon" type="image/png" href="{{ asset('icon/web_logo.png') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
 

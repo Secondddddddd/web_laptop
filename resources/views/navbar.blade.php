@@ -1,3 +1,5 @@
+
+
 <nav class="bg-white shadow-md mb-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
@@ -20,9 +22,12 @@
             <!-- Giỏ hàng & Tài khoản -->
             <div class="flex items-center space-x-4 ml-4">
                 <!-- Giỏ hàng -->
-                <a href="#" class="relative">
-                    🛒 <span class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 rounded-full">0</span>
+                <a href="{{route('user.cart')}}" class="relative">
+                    🛒 <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 rounded-full">
+                              {{ auth()->check() ? $totalQuantity : 0 }}
+                        </span>
                 </a>
+
 
                 <!-- Tài khoản -->
                 @auth
@@ -38,7 +43,7 @@
                             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lịch sử giao dịch</a>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full text-left block px-4 py-2 text-red-600 hover:bg-gray-200">
+                                <button type="submit" id="logout-button" class="w-full text-left block px-4 py-2 text-red-600 hover:bg-gray-200">
                                     Đăng xuất
                                 </button>
                             </form>
@@ -77,4 +82,65 @@
     }
     });
     });
+
+
+            function updateCartQuantity() {
+            fetch("{{ url('/cart/quantity') }}") // Gửi yêu cầu lấy số lượng giỏ hàng
+                .then(response => response.json()) // Chuyển đổi phản hồi thành JSON
+                .then(data => {
+                    document.getElementById("cart-count").innerText = data.totalQuantity; // Cập nhật số lượng hiển thị
+                })
+                .catch(error => console.error("Lỗi khi cập nhật giỏ hàng:", error));
+        }
+
+            document.addEventListener("DOMContentLoaded", function () {
+            updateCartQuantity(); // Cập nhật số lượng khi tải trang
+
+            document.querySelectorAll("form[action*='cart/add']").forEach(form => {
+            form.addEventListener("submit", function (event) {
+            event.preventDefault(); // Ngăn chặn form gửi yêu cầu HTTP thông thường
+            let formData = new FormData(this);
+
+            fetch(this.action, {
+            method: "POST",
+            body: formData,
+            headers: {
+            "X-Requested-With": "XMLHttpRequest",
+            "X-CSRF-TOKEN": document.querySelector("meta[name='csrf-token']").getAttribute("content")
+        }
+        })
+            .then(response => response.json())
+            .then(data => {
+            if (data.success) {
+            updateCartQuantity(); // Cập nhật số lượng giỏ hàng
+                // Tạo một div thông báo mới
+                let notification = document.createElement("div");
+                notification.className = "bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 alert fixed top-5 right-5 shadow-md";
+                notification.innerHTML = `<p>${data.message}</p>`;
+
+                document.body.appendChild(notification);
+
+                // Tự động ẩn sau 5 giây
+                setTimeout(() => notification.remove(), 5000);
+        } else if (data.message) {
+                // Tạo một div thông báo mới
+                let notification = document.createElement("div");
+                notification.className = "bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 alert fixed top-5 right-5 shadow-md";
+                notification.innerHTML = `<p>${data.message}</p>`;
+
+                document.body.appendChild(notification);
+
+                // Tự động ẩn sau 5 giây
+                setTimeout(() => notification.remove(), 5000);
+        }
+        })
+            .catch(error => console.error("Lỗi khi thêm giỏ hàng:", error));
+        });
+        });
+        });
+
+            // Khi người dùng logout, đặt số lượng giỏ hàng về 0
+            document.querySelector("#logout-button")?.addEventListener("click", function() {
+            document.getElementById("cart-count").innerText = "0";
+        });
 </script>

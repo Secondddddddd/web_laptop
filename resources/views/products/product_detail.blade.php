@@ -17,10 +17,10 @@
         <!-- Bố cục chính -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Hình ảnh sản phẩm (Nhỏ, căn trái) -->
-                <div class="flex justify-center md:justify-start border">
+                <div class="flex justify-center md:justify-start">
                     <img src="{{ asset('img/'.$product->image_url) }}"
                          alt="{{ $product->name }}"
-                         class="w-64 h-auto rounded-md shadow-md">
+                         class="w-full max-w-xs md:max-w-sm lg:max-w-md h-auto object-cover rounded-md">
                 </div>
 
                 <!-- Thông tin sản phẩm (Căn phải) -->
@@ -47,16 +47,17 @@
                         @endauth
                     </div>
 
-
-
-
-
-
                     <!-- Nút mua hàng -->
-                    <div class="mt-4 flex space-x-4">
-                        <form action="{{ route('cart.add', $product->product_id) }}" method="POST">
+                    <div class="mt-4 space-x-4">
+                        <form action="{{ route('cart.add', $product->product_id) }}" method="POST" class="flex flex-col space-y-2 mb-3">
                             @csrf
-                            <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
+                            <input type="hidden" name="product_id" value="{{ $product->product_id }}">
+                            <div class="flex items-center border rounded-md w-48">
+                                <button type="button" class="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-l-md">-</button>
+                                <input type="number" name="quantity" class="text-center w-full border-x outline-none" min="0" max="{{$product->quantity }}" value="1"/>
+                                <button type="button" class="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-r-md">+</button>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-48">Thêm vào giỏ hàng</button>
                         </form>
                         <form action="{{ route('order.buy_now', $product->product_id) }}" method="POST">
                             @csrf

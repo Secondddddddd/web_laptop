@@ -21,11 +21,6 @@ class AuthController extends Controller
             'password' => 'required|min:6',
         ]);
 
-        // Kiểm tra nếu có URL trước đó thì lưu lại (chỉ lưu nếu nó không phải trang login)
-        if (!session()->has('url.intended') && url()->previous() !== route('login')) {
-            session(['url.intended' => url()->previous()]);
-        }
-
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
 
@@ -33,8 +28,8 @@ class AuthController extends Controller
                 case 'admin':
                     return redirect()->route('admin_dashboard')->with('success', 'Đăng nhập thành công!');
                 case 'customer':
-                    // Chuyển hướng về trang trước đó hoặc trang chủ nếu không có URL trước
-                    return redirect(session()->pull('url.intended', '/'))->with('success', 'Chào mừng bạn trở lại!');
+                    // Lấy URL từ session hoặc mặc định về trang chủ
+                    return redirect(session('url.intended', '/'))->with('success', 'Chào mừng bạn trở lại!');
                 case 'staff':
                     return redirect()->route('admin_product_list')->with('success', 'Chào mừng nhân viên!');
                 default:

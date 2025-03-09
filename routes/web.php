@@ -47,7 +47,20 @@ Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('p
 Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
 Route::get('/laptops', [ProductController::class, 'laptopList'])->name('laptops');
 Route::get('/accessories', [ProductController::class, 'accessories'])->name('accessories');
-Route::get('/products/{product_id}/{product_slug}', [ProductController::class, 'showProductDetail'])->name('product.detail');
-Route::post('/cart/add/{product_id}', [CartController::class, 'addToCart'])->name('cart.add');
+Route::get('/laptops/{product_id}/{product_slug}', [ProductController::class, 'showProductDetail'])->name('product.detail');
 Route::post('/order/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
-Route::post('/products/{product_id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+Route::post('/laptops/{product_id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+
+Route::prefix('/cart')->group(function () {
+
+    Route::post('/add/{product_id}', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::get('/', [CartController::class, 'viewCart'])->name('user.cart');
+    Route::get('/quantity', function () {
+        if (!auth()->check()) {
+            return response()->json(['totalQuantity' => 0]); // Nếu chưa đăng nhập, số lượng giỏ hàng là 0
+        }
+        $cart = session()->get('cart', []);
+        return response()->json(['totalQuantity' => array_sum(array_column($cart, 'quantity'))]);
+    });
+});
+
