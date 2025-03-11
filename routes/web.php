@@ -7,6 +7,8 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AddressController;
 
 Route::get('/', function () {
     return view('home_page');
@@ -63,6 +65,9 @@ Route::prefix('/cart')->group(function () {
         return response()->json(['totalQuantity' => array_sum(array_column($cart, 'quantity'))]);
     });
     Route::post('/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
-
 });
 
+    Route::get('/user/info',[UserController::class, 'showUserInfo'])->name('user.info');
+    Route::get('/api/districts/{province_code}', [AddressController::class, 'getDistricts']);
+    Route::get('/api/wards/{district_code}', [AddressController::class, 'getWards']);
+    Route::post('/user/address/store', [UserController::class, 'store'])->name('address.store');

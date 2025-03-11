@@ -39,7 +39,7 @@
 
                         <!-- Dropdown menu -->
                         <div id="dropdown-menu" class="absolute right-0 w-48 mt-2 bg-white border rounded shadow-lg hidden">
-                            <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Thông tin cá nhân</a>
+                            <a href="{{route('user.info')}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Thông tin cá nhân</a>
                             <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lịch sử giao dịch</a>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf

@@ -14,9 +14,13 @@
 <div class="container flex h-screen w-screen">
     <!-- Sidebar trái -->
     <div class="w-1/4 bg-black-200">
-        <div class="border-b-2 flex items-center space-x-2 p-2">
+        <div class="">
+            <a href="/" class="border-b-2 flex items-center space-x-2 p-2">
             <img src="{{asset('icon/web_logo.png')}}" alt="Web logo" class="w-10 h-10 rounded-full">
-            <p class="text-lg font-semibold text-gray-500">Web Laptop</p>
+            <p class="text-lg font-semibold text-gray-500">
+                Web Laptop
+            </p>
+            </a>
         </div>
         <div class="border-b-2 flex items-center space-x-2 p-2">
             <img src="{{asset('avatar/geats_chibi.jpg')}}" alt="Web logo" class="w-12 h-12 rounded-full border-2 border-black">
