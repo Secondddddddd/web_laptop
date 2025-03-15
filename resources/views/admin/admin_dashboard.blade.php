@@ -58,7 +58,20 @@
     <!-- Nội dung chính -->
     <div class="w-3/4 flex flex-col">
         <!-- Thanh trên cùng -->
-        <div class="h-20 bg-blue-200">
+        <div class="">
+            <nav class="border-b-2 mb-4">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex h-16">
+                        <!-- Menu (Căn giữa) -->
+                        <div class="flex-1 flex items-center space-x-8">
+                            <a href="/" class="text-gray-700 hover:text-blue-600">Trang chủ</a>
+                            <a href="{{route('laptops')}}" class="text-gray-700 hover:text-blue-600">Laptop</a>
+                            <a href="{{route('accessories')}}" class="text-gray-700 hover:text-blue-600">Phụ kiện</a>
+                            <a href="#" class="text-gray-700 hover:text-blue-600">Liên hệ</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
 
         </div>
 

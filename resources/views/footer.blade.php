@@ -25,7 +25,7 @@
                 <h2 class="text-lg font-semibold">Liên hệ</h2>
                 <ul class="mt-2 space-y-2">
                     <li class="text-gray-400">📍 Địa chỉ: Hà Nội, Việt Nam</li>
-                    <li class="text-gray-400">📞 Điện thoại: 0123-456-789</li>
+                    <li class="text-gray-400">📞 Điện thoại: 0979-1011-22</li>
                     <li class="text-gray-400">📧 Email: support@laptopstore.com</li>
                 </ul>
             </div>

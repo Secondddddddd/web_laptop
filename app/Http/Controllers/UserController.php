@@ -32,7 +32,7 @@ class UserController extends Controller
             'district_code' => 'required|string|exists:districts,code',
             'ward_code'     => 'required|string|exists:wards,code',
             'address_detail'=> 'required|string|max:255',
-            'is_default' => 'nullable|accepted',
+            'is_default'     => 'nullable|boolean',
         ]);
 
         // Nếu người dùng chọn đặt làm mặc định, reset các địa chỉ khác về false

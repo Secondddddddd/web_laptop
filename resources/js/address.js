@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     data.forEach(district => {
                         const option = document.createElement('option');
                         option.value = district.code;
-                        option.textContent = district.name;
+                        option.textContent = district.full_name;
                         districtSelect.appendChild(option);
                     });
                 });
@@ -30,12 +30,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (districtCode) {
             fetch(`/api/wards/${districtCode}`)
-                .then(response => response.json())
+                .then(response => response.json()
+
+                )
                 .then(data => {
                     data.forEach(ward => {
                         const option = document.createElement('option');
                         option.value = ward.code;
-                        option.textContent = ward.name;
+                        option.textContent = ward.full_name;
                         wardSelect.appendChild(option);
                     });
                 });

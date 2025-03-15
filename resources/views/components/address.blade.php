@@ -28,9 +28,9 @@
                 <li class="p-4 bg-gray-100 rounded-lg flex justify-between items-center">
                     <span>
                         {{ $address->address_detail }},
-                        {{ $address->ward->name ?? '' }},
-                        {{ $address->district->name ?? '' }},
-                        {{ $address->province->name ?? '' }}
+                        {{ $address->ward->full_name ?? '' }},
+                        {{ $address->district->full_name ?? '' }},
+                        {{ $address->province->full_name ?? '' }}
 
                     @if($address->is_default)
                             <span class="ml-2 px-2 py-1 bg-green-500 text-white text-xs rounded">Mặc định</span>
@@ -64,7 +64,7 @@
                     <select name="province_code" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                         <option value="">-- Chọn Tỉnh/TP --</option>
                         @foreach($provinces as $province)
-                            <option value="{{ $province->code }}">{{ $province->name }}</option>
+                            <option value="{{ $province->code }}">{{ $province->full_name }}</option>
                         @endforeach
                     </select>
                 </div>

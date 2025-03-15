@@ -19,10 +19,16 @@
                     {{Auth::user()->full_name}}
                 </p>
             </div>
-            <div class="grid text-2xl ml-2">
-                <p class="mt-2 mb-3 text-primary">Thông tin cá nhân</p>
-                <p class="mb-3">Địa chỉ</p>
-                <p >Đổi mật khẩu</p>
+            <div class="grid text-2xl">
+                <div class="hover:bg-gray-400">
+                    <p class="mt-2 mb-3 text-primary ml-2">Thông tin cá nhân</p>
+                </div>
+                <div class="hover:bg-gray-400" >
+                    <p class="mb-3 ml-2">Địa chỉ</p>
+                </div>
+                <div class="hover:bg-gray-400" >
+                    <p class="ml-2">Đổi mật khẩu</p>
+                </div>
             </div>
         </div>
 
