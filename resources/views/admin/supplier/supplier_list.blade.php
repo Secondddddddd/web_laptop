@@ -1,32 +1,35 @@
 @extends('admin.admin_dashboard')
 
-@section('title', 'Category List')
+@section('title', 'Supplier List')
 
 @section('content')
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 mt-5">
-        <h2 class="text-2xl font-bold text-gray-800 mb-4">Danh sách danh mục</h2>
+        <h1 class="text-2xl font-bold text-gray-800 mb-4">Danh sách nhà cung cấp</h1>
 
         <x-alert-result />
 
-        <a href="{{ route('admin_category_add') }}"
-           class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">
-            Thêm Thể Loại
+        <a href="{{ route('admin_supplier_add') }}" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">
+            Thêm Nhà Cung Cấp
         </a>
 
         <div class="overflow-x-auto">
-            <div id="category-table"></div>
+            <div id="supplier-table"></div>
         </div>
     </div>
 
     <script type="module">
+
         document.addEventListener('DOMContentLoaded', function () {
-            const categoryTable = document.getElementById('category-table');
-            if (categoryTable) {
+            const supplierTable = document.getElementById('supplier-table');
+            if (supplierTable) {
                 new Grid({
                     columns: [
                         { id: 'index', name: '#' },
-                        { id: 'name', name: 'Tên danh mục' },
-                        { id: 'actions', name: 'Hành động' },
+                        { id: 'name', name: 'Tên nhà cung cấp' },
+                        { id: 'email', name: 'Email' },
+                        { id: 'phone', name: 'Số điện thoại' },
+                        { id: 'address', name: 'Địa chỉ' },
+                        { id: 'actions', name: 'Hành động' }
                     ],
                     pagination: {
                         enabled: true,
@@ -35,13 +38,16 @@
                     sort: true,
                     search: true,
                     server: {
-                        url: '/api/admin/categories',
-                        then: data => data.map((category, index) => [
+                        url: '/api/admin/suppliers',
+                        then: data => data.map((supplier, index) => [
                             index + 1,
-                            category.name,
+                            supplier.name,
+                            supplier.email,
+                            supplier.phone,
+                            supplier.address,
                             html(`
-                                <a href="/admin/categories/${category.category_id}/edit" class="text-blue-500 hover:underline mr-2">Sửa</a>
-                                <form action="/admin/categories/${category.category_id}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                                <a href="/admin/suppliers/${supplier.supplier_id}/edit" class="text-blue-500 hover:underline mr-2">Sửa</a>
+                                <form action="/admin/suppliers/${supplier.supplier_id}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa nhà cung cấp này?');">
                                     <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700">Xóa</button>
@@ -51,19 +57,19 @@
                     },
                     language: {
                         'search': {
-                            'placeholder': '🔍 Tìm kiếm danh mục...'
+                            'placeholder': '🔍 Tìm kiếm nhà cung cấp...'
                         },
                         'pagination': {
                             'previous': '⬅️',
                             'next': '➡️',
                             'showing': 'Hiển thị',
-                            'results': () => 'danh mục'
+                            'results': () => 'kết quả'
                         },
                         'loading': 'Đang tải...',
-                        'noRecordsFound': 'Không tìm thấy danh mục nào',
+                        'noRecordsFound': 'Không tìm thấy nhà cung cấp nào',
                         'error': 'Có lỗi xảy ra khi tải dữ liệu'
                     }
-                }).render(categoryTable);
+                }).render(supplierTable);
             }
         });
     </script>

@@ -10,50 +10,66 @@
         <x-alert-result />
 
         <div class="overflow-x-auto">
-            <table class="w-full bg-white border border-gray-300 rounded-lg shadow-md">
-                <thead>
-                <tr class="bg-gray-100">
-                    <th class="px-4 py-3 text-left border-b">#</th>
-                    <th class="px-4 py-3 text-left border-b">Tên sản phẩm</th>
-                    <th class="px-4 py-3 text-left border-b">Giá</th>
-                    <th class="px-4 py-3 text-left border-b">Số lượng</th>
-                    <th class="px-4 py-3 text-left border-b">Danh mục</th>
-                    <th class="px-4 py-3 text-left border-b">Nhà cung cấp</th>
-                    <th class="px-4 py-3 text-center border-b">Hình ảnh</th>
-                    <th class="px-4 py-3 text-center border-b">Hành động</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach ($products as $product)
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-4 py-3 border-b">{{ $loop->iteration + ($products->currentPage() - 1) * $products->perPage() }}</td>
-                        <td class="px-4 py-3 border-b font-semibold">{{ $product->name }}</td>
-                        <td class="px-4 py-3 border-b text-green-600 font-bold">{{ number_format($product->price, 2) }} đ</td>
-                        <td class="px-4 py-3 border-b text-center">{{ $product->stock_quantity }}</td>
-                        <td class="px-4 py-3 border-b">{{ $product->category->name ?? 'Không có' }}</td>
-                        <td class="px-4 py-3 border-b">{{ $product->supplier->name ?? 'Không có' }}</td>
-                        <td class="px-4 py-3 border-b flex justify-center">
-                            <img src="{{ asset('img/'.$product->image_url ?? 'default.jpg') }}" alt="Product Image" class="h-12 w-12 rounded">
-                        </td>
-                        <td class="px-4 py-3 border-b text-center">
-                            <div class="flex items-center justify-center space-x-2">
-                                <a href="{{ route('admin_product_edit', ['product_id' => $product->product_id]) }}" class="text-blue-500 hover:underline">Sửa</a>
-                                <form action="{{ route('admin_product_delete', ['product_id' => $product->product_id]) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700">Xóa</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Thanh Phân Trang -->
-        <div class="mb-4 mt-4 flex justify-center">
-            {{ $products->links('vendor.pagination.tailwind') }}
+            <div id="product-table"></div>
         </div>
     </div>
+    <script type="module">
+        document.addEventListener('DOMContentLoaded', function () {
+            const productTable = document.getElementById('product-table');
+            if (productTable) {
+                new Grid({
+                    columns: [
+                        { id: 'index', name: '#' },
+                        { id: 'name', name: 'Tên sản phẩm' },
+                        { id: 'price', name: 'Giá' },
+                        { id: 'stock_quantity', name: 'Số lượng' },
+                        { id: 'category', name: 'Danh mục' },
+                        { id: 'supplier', name: 'Nhà cung cấp' },
+                        { id: 'image', name: 'Hình ảnh' },
+                        { id: 'actions', name: 'Hành động' },
+                    ],
+                    pagination: {
+                        enabled: true,
+                        limit: 10
+                    },
+                    sort: true,
+                    search: true,
+                    server: {
+                        url: '/api/admin/products',
+                        then: data => data.map((product, index) => [
+                            index + 1,
+                            product.name,
+                            parseFloat(product.price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }),
+                            product.stock_quantity,
+                            product.category?.name || 'Không có',
+                            product.supplier?.name || 'Không có',
+                            html(`<img src="/img/${product.image_url ?? 'default.jpg'}" class="h-12 w-12 rounded" alt="Hình ảnh">`),
+                            html(`
+                        <a href="/admin/products/${product.product_id}/edit" class="text-blue-500 hover:underline mr-2">Sửa</a>
+                        <form action="/admin/products/${product.product_id}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">
+                            <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700">Xóa</button>
+                        </form>
+                    `)
+                        ])
+                    },
+                    language: {
+                        'search': {
+                            'placeholder': '🔍 Tìm kiếm sản phẩm...'
+                        },
+                        'pagination': {
+                            'previous': '⬅️',
+                            'next': '➡️',
+                            'showing': 'Hiển thị',
+                            'results': () => 'sản phẩm'
+                        },
+                        'loading': 'Đang tải...',
+                        'noRecordsFound': 'Không tìm thấy sản phẩm nào',
+                        'error': 'Có lỗi xảy ra khi tải dữ liệu'
+                    }
+                }).render(productTable);
+            }
+        });
+    </script>
 @endsection

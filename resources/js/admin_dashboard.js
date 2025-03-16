@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
         window.location.href = "/admin/users";
     });
 
+    supplier.addEventListener("click", ()=>{
+        window.location.href = "/admin/suppliers";
+    });
+
+
     if (addProductBtn){
         addProductBtn.addEventListener("click", ()=>{
             window.location.href = "/admin/product/add";

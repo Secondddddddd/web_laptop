@@ -35,6 +35,11 @@ Route::prefix('admin')->group(function () {
     Route::post('/users/store', [AdminController::class, 'storeUser'])->name('admin_user_store');
     Route::get('/users/{id}/edit', [AdminController::class, 'editUser'])->name('admin_user_edit');
     Route::post('/users/{id}/update', [AdminController::class, 'updateUser'])->name('admin_user_update');
+    Route::get('/suppliers', [AdminController::class, 'supplier_list'])->name('admin_supplier_list');
+    Route::get('/suppliers/{id}/edit', [AdminController::class, 'editSupplier'])->name('admin_supplier_edit');
+    Route::delete('/suppliers/{id}', [AdminController::class, 'destroySupplier'])->name('admin_supplier_delete');
+    Route::get('/suppliers/create', [AdminController::class, 'createSupplier'])->name('admin_supplier_add');
+    Route::post('/suppliers', [AdminController::class, 'storeSupplier'])->name('admin_supplier_store');
 
 });
 
@@ -65,6 +70,13 @@ Route::prefix('/cart')->group(function () {
         return response()->json(['totalQuantity' => array_sum(array_column($cart, 'quantity'))]);
     });
     Route::post('/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+});
+
+Route::prefix('api')->group(function () {
+    Route::get('/admin/products', [AdminController::class, 'getProductListApi'])->name('admin_product_api');
+    Route::get('/admin/categories', [AdminController::class, 'api_category_list'])->name('admin.api.category.list');
+    Route::get('/admin/suppliers', [AdminController::class, 'apiSupplierList']);
+
 });
 
     Route::get('/user/info',[UserController::class, 'showUserInfo'])->name('user.info');

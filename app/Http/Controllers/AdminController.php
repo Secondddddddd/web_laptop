@@ -12,7 +12,6 @@ use App\Models\User;
 use App\Models\Order;
 
 
-
 class AdminController extends Controller
 {
     //
@@ -49,17 +48,29 @@ class AdminController extends Controller
         ));
     }
 
-    function product_list()
+    public function getProductListApi()
     {
-        $products = Product::with(['category', 'supplier'])->paginate(10); // Hiển thị 10 sản phẩm mỗi trang
-        return view('admin.product.product_list', compact('products'));
+        $products = Product::with(['category', 'supplier'])->get(); // Lấy tất cả (hoặc giới hạn nếu cần)
+        return response()->json($products);
     }
+
+    function product_list()
+        {
+            return view('admin.product.product_list');
+        }
 
     function category_list()
     {
-        $categories = Category::paginate(10); // Lấy toàn bộ danh mục từ database
-        return view('admin.category.category_list', ['categories'=>$categories]);
+        return view('admin.category.category_list');
     }
+
+    public function api_category_list()
+    {
+        $categories = Category::all();
+
+        return response()->json($categories);
+    }
+
 
     public function create()
     {
@@ -390,4 +401,54 @@ class AdminController extends Controller
         }
     }
 
+    public function supplier_list()
+    {
+        return view('admin.supplier.supplier_list');
+    }
+
+    public function apiSupplierList()
+    {
+        $suppliers = Supplier::all();
+        return response()->json($suppliers);
+    }
+
+    public function destroySupplier($id)
+    {
+        $supplier = Supplier::findOrFail($id);
+        $supplier->delete();
+
+        return redirect()->route('admin_supplier_list')->with('success', 'Xóa nhà cung cấp thành công');
+    }
+
+    public function editSupplier($id)
+    {
+        $supplier = Supplier::findOrFail($id);
+        return view('admin.supplier.edit_supplier', compact('supplier'));
+    }
+
+    public function createSupplier()
+    {
+        return view('admin.supplier.create_supplier');
+    }
+
+    public function storeSupplier(Request $request)
+    {
+        // Validate dữ liệu nhập vào
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'contact_name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:255',
+        ], [
+            'name.required' => 'Tên nhà cung cấp là bắt buộc.',
+            'email.email' => 'Email không hợp lệ.',
+        ]);
+
+        // Lưu nhà cung cấp mới
+        Supplier::create($request->all());
+
+        // Chuyển hướng kèm thông báo thành công
+        return redirect()->route('admin_supplier_add')->with('success', 'Thêm nhà cung cấp thành công!');
+    }
 }

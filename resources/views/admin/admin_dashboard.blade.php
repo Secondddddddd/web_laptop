@@ -6,6 +6,7 @@
     <title>@yield('title', 'Laptop Store')</title>
     @vite(['resources/css/app.css','resources/css/admin_dashboard.css', 'resources/js/app.js'])
     @vite(['resources/js/admin_dashboard.js'])
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
