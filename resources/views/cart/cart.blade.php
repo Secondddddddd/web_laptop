@@ -5,11 +5,14 @@
     <div class="container mx-auto p-4">
         <h2 class="text-2xl font-bold mb-4">Giỏ hàng của bạn</h2>
 
-        @if(session('success'))
-            <div class="bg-green-200 text-green-700 p-2 rounded mb-3">
-                {{ session('success') }}
+        <x-alert-result />
+
+        <!-- Toast thông báo -->
+        <div id="toast" class="toast toast-top toast-center hidden">
+            <div class="alert alert-error">
+                <span>Vui lòng chọn ít nhất 1 sản phẩm để thanh toán.</span>
             </div>
-        @endif
+        </div>
 
         @if(empty($cart) || count($cart) == 0)
             <p class="text-gray-600">Giỏ hàng của bạn đang trống.</p>
@@ -29,7 +32,7 @@
                 </thead>
                 <tbody>
                 @foreach($cart as $id => $product)
-                    <tr>
+                    <tr data-id="{{ $id }}">
                         <td class="border p-2">
                             <input type="checkbox" class="checkbox product-checkbox" data-price="{{ $product['price'] * $product['quantity'] }}">
                         </td>
@@ -65,7 +68,9 @@
 
             <div class="mt-5">
                 <a href="{{ route('home') }}" class="bg-gray-500 text-white px-4 py-2 rounded">Tiếp tục mua sắm</a>
-                <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded">Thanh toán</a>
+                <button id="payment-btn" class="btn bg-blue-500 text-white px-4 py-2 rounded">
+                    Thanh toán
+                </button>
             </div>
         @endif
     </div>

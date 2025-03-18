@@ -62,8 +62,9 @@
                             </div>
                             <button type="submit" class="btn btn-primary w-48">Thêm vào giỏ hàng</button>
                         </form>
-                        <form action="{{ route('order.buy_now', $product->product_id) }}" method="POST">
+                        <form action="{{ route('order.buy_now', $product->product_id) }}" id="buy-now-form" method="POST">
                             @csrf
+                            <input type="number" class="hidden" name="quantity" id="buy-now-quantity" value="1" max="{{$product->quantity }}">
                             <button type="submit" class="btn btn-success">Mua ngay</button>
                         </form>
                     </div>

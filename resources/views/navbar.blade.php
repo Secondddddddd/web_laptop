@@ -21,16 +21,17 @@
 
             <!-- Giỏ hàng & Tài khoản -->
             <div class="flex items-center space-x-4 ml-4">
-                <!-- Giỏ hàng -->
-                <a href="{{route('user.cart')}}" class="relative">
-                    🛒 <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 rounded-full">
-                              {{ auth()->check() ? $totalQuantity : 0 }}
-                        </span>
-                </a>
+
 
 
                 <!-- Tài khoản -->
                 @auth
+                    <!-- Giỏ hàng -->
+                    <a href="{{route('user.cart')}}" class="relative">
+                        🛒 <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 rounded-full">
+                              {{ auth()->check() ? $totalQuantity : 0 }}
+                        </span>
+                    </a>
                     <div class="relative" id="user-dropdown">
                         <button class="flex items-center space-x-2" id="dropdown-toggle">
                             <img src="{{ asset('avatar/'.Auth::user()->avatar ?? 'avatar/avatar_default.jpg') }}" alt="Avatar" class="w-8 h-8 rounded-full">

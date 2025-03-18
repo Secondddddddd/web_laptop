@@ -77,5 +77,19 @@ class CartController extends Controller
         return back()->with('success', 'Sản phẩm đã bị xóa khỏi giỏ hàng.');
     }
 
+    public function checkoutCart(Request $request)
+    {
+        $cart = session()->get('cart', []);
+        $selectedProducts = collect($request->input('products', []))->mapWithKeys(function ($id) use ($cart) {
+            return isset($cart[$id]) ? [$id => $cart[$id]] : [];
+        });
+
+        if ($selectedProducts->isEmpty()) {
+            return redirect()->route('user.cart')->with('error', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
+        }
+
+        $addresses = auth()->user()->addresses ?? [];
+        return view('cart.checkoutCart', compact('selectedProducts', 'addresses'));
+    }
 
 }

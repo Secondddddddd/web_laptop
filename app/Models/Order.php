@@ -19,7 +19,10 @@ class Order extends Model
     protected $fillable = [
         'user_id',
         'payment_method',
+        'otp_code',
+        'address',
         'total_price',
+        'shipper_id',
         'order_status',
         'created_at',
     ];
@@ -31,10 +34,34 @@ class Order extends Model
     ];
 
     /**
-     * Định nghĩa quan hệ: Một đơn hàng thuộc về một người dùng.
+     * Định nghĩa quan hệ: Một đơn hàng thuộc về một người dùng (khách hàng).
      */
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
+
+    /**
+     * Định nghĩa quan hệ: Một đơn hàng có thể có một shipper (nhân viên giao hàng).
+     */
+    public function shipper()
+    {
+        return $this->belongsTo(User::class, 'shipper_id', 'user_id');
+    }
+
+    /**
+     * Định nghĩa quan hệ: Một đơn hàng có nhiều chi tiết đơn hàng (sản phẩm).
+     */
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'order_id', 'order_id');
+    }
+
+    /**
+     * Định nghĩa quan hệ: Một đơn hàng có thông tin giao hàng (shipping).
+     */
+    public function shipping()
+    {
+        return $this->hasOne(Shipping::class, 'order_id', 'order_id');
     }
 }

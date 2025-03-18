@@ -1,8 +1,10 @@
+// const checkbox = require("daisyui/components/checkbox/index.js");
 document.addEventListener("DOMContentLoaded", function() {
     const checkboxes = document.querySelectorAll(".product-checkbox");
     const totalPriceElement = document.querySelector(".total_price");
     const productCheckBoxAll = document.querySelector('.product-checkbox-all');
-
+    const paymentBtn = document.getElementById('payment-btn');
+    const toast = document.getElementById('toast');
     // Hàm cập nhật tổng giá giỏ hàng
     function updateTotal() {
         let total = 0;
@@ -80,4 +82,42 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     updateTotal(); // Cập nhật tổng khi trang tải
+
+    paymentBtn.addEventListener("click", () => {
+        let selectedProducts = [];
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedProducts.push(checkbox.closest("tr").dataset.id);
+            }
+        });
+
+        if (selectedProducts.length === 0) {
+            toast.classList.remove("hidden");
+            setTimeout(() => toast.classList.add("hidden"), 3000);
+            return;
+        }
+
+        let form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/cart/checkout";
+
+        let csrf = document.createElement("input");
+        csrf.type = "hidden";
+        csrf.name = "_token";
+        csrf.value = document.querySelector('meta[name="csrf-token"]').getAttribute("content");
+        form.appendChild(csrf);
+
+        selectedProducts.forEach(id => {
+            let input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "products[]";
+            input.value = id;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+    });
+
+
 });

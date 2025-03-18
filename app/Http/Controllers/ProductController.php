@@ -65,4 +65,6 @@ public function laptopList(Request $request)
         // Hiển thị trang chi tiết sản phẩm
         return view('products.product_detail', compact('product'));
     }
+
+
 }

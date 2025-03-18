@@ -70,6 +70,9 @@ Route::prefix('/cart')->group(function () {
         return response()->json(['totalQuantity' => array_sum(array_column($cart, 'quantity'))]);
     });
     Route::post('/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/checkout', [CartController::class, 'checkoutCart'])->name('cart.checkout');
+    Route::post('/processCheckout', [OrderController::class,'ProcessCheckoutCart'])->name('cart.processCheckout');
+
 });
 
 Route::prefix('api')->group(function () {
@@ -83,3 +86,6 @@ Route::prefix('api')->group(function () {
     Route::get('/api/districts/{province_code}', [AddressController::class, 'getDistricts']);
     Route::get('/api/wards/{district_code}', [AddressController::class, 'getWards']);
     Route::post('/user/address/store', [UserController::class, 'store'])->name('address.store');
+
+    Route::post('/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
+    Route::post('/checkout', [OrderController::class, 'checkoutSubmitBuyNow'])->name('order.checkout_submit');
