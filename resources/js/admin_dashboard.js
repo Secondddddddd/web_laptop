@@ -21,6 +21,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
         window.location.href = "/admin/suppliers";
     });
 
+    order.addEventListener("click", ()=>{
+        window.location.href = "/admin/orders";
+    })
+
 
     if (addProductBtn){
         addProductBtn.addEventListener("click", ()=>{

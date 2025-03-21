@@ -40,7 +40,7 @@ Route::prefix('admin')->group(function () {
     Route::delete('/suppliers/{id}', [AdminController::class, 'destroySupplier'])->name('admin_supplier_delete');
     Route::get('/suppliers/create', [AdminController::class, 'createSupplier'])->name('admin_supplier_add');
     Route::post('/suppliers', [AdminController::class, 'storeSupplier'])->name('admin_supplier_store');
-
+    Route::get('/orders',[AdminController::class, 'orderList'])->name('admin_order_list');
 });
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -72,6 +72,7 @@ Route::prefix('/cart')->group(function () {
     Route::post('/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
     Route::post('/checkout', [CartController::class, 'checkoutCart'])->name('cart.checkout');
     Route::post('/processCheckout', [OrderController::class,'ProcessCheckoutCart'])->name('cart.processCheckout');
+    Route::post('/update/{id}', [CartController::class, 'updateCart'])->name('cart.update');
 
 });
 
@@ -79,7 +80,7 @@ Route::prefix('api')->group(function () {
     Route::get('/admin/products', [AdminController::class, 'getProductListApi'])->name('admin_product_api');
     Route::get('/admin/categories', [AdminController::class, 'api_category_list'])->name('admin.api.category.list');
     Route::get('/admin/suppliers', [AdminController::class, 'apiSupplierList']);
-
+    Route::get('/admin/orders',[AdminController::class,'getOrders'])->name('admin.order.list');
 });
 
     Route::get('/user/info',[UserController::class, 'showUserInfo'])->name('user.info');

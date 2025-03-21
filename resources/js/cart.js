@@ -23,15 +23,37 @@ document.addEventListener("DOMContentLoaded", function() {
         const totalElement = row.querySelector("td:nth-child(5)");
         const checkbox = row.querySelector(".product-checkbox");
 
-        const unitPrice = parseFloat(priceElement.dataset.price); // Lấy giá sản phẩm gốc
+        const unitPrice = parseFloat(priceElement.dataset.price);
         const quantity = parseInt(quantityInput.value);
         const newTotal = unitPrice * quantity;
 
-        totalElement.textContent = new Intl.NumberFormat('vi-VN').format(newTotal) + " VND"; // Cập nhật tổng tiền
-        checkbox.dataset.price = newTotal; // Cập nhật giá trị checkbox để tổng giỏ hàng chính xác
+        const productId = row.getAttribute("data-id"); // Lấy ID sản phẩm từ <tr data-id="...">
 
-        updateTotal(); // Cập nhật tổng giỏ hàng
+        totalElement.textContent = new Intl.NumberFormat('vi-VN').format(newTotal) + " VND";
+        checkbox.dataset.price = newTotal; // Cập nhật giá trị checkbox
+
+        updateTotal(); // Cập nhật tổng giá trị giỏ hàng
+
+        // Gửi request cập nhật session
+        fetch(`/cart/update/${productId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+            },
+            body: JSON.stringify({ quantity: quantity })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log("Cập nhật giỏ hàng thành công!");
+                } else {
+                    console.error("Cập nhật thất bại:", data.message);
+                }
+            })
+            .catch(error => console.error("Lỗi:", error));
     }
+
 
     // Xử lý khi nhấn nút tăng/giảm số lượng
     document.querySelectorAll("tr").forEach(row => {

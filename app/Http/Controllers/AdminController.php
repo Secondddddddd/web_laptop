@@ -451,4 +451,23 @@ class AdminController extends Controller
         // Chuyển hướng kèm thông báo thành công
         return redirect()->route('admin_supplier_add')->with('success', 'Thêm nhà cung cấp thành công!');
     }
+
+    function orderList()
+    {
+        return view('admin.order.order_list');
+    }
+
+    public function getOrders(Request $request)
+    {
+        $status = $request->query('status'); // Lấy chính xác từ query parameter
+
+        $orders = Order::with('user')
+            ->when($status, function ($query, $status) { // Sửa điều kiện
+                return $query->where('order_status', $status);
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($orders);
+    }
 }

@@ -92,4 +92,25 @@ class CartController extends Controller
         return view('cart.checkoutCart', compact('selectedProducts', 'addresses'));
     }
 
+    public function updateCart(Request $request, $id)
+    {
+        $cart = session()->get('cart', []);
+
+        if (!isset($cart[$id])) {
+            return response()->json(['success' => false, 'message' => 'Sản phẩm không tồn tại trong giỏ hàng.']);
+        }
+
+        $quantity = $request->input('quantity');
+
+        if ($quantity < 1) {
+            return response()->json(['success' => false, 'message' => 'Số lượng không hợp lệ.']);
+        }
+
+        $cart[$id]['quantity'] = $quantity;
+
+        session()->put('cart', $cart);
+
+        return response()->json(['success' => true, 'message' => 'Giỏ hàng đã được cập nhật.']);
+    }
+
 }
