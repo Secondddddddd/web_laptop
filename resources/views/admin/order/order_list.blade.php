@@ -58,10 +58,21 @@
                         new Intl.NumberFormat("vi-VN").format(order.total_price) + " VND",
                         order.payment_method.toUpperCase(),
                         order.order_status,
-                        order.created_at,
+                        new Intl.DateTimeFormat("vi-VN", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                            timeZone: "Asia/Ho_Chi_Minh"
+                        }).format(new Date(order.created_at)),
                         html(`
-                    <a href="/admin/orders/${order.order_id}" class="text-blue-500 hover:underline mr-2">Xem</a>
-                    <a href="/admin/orders/${order.order_id}/edit" class="text-yellow-500 hover:underline mr-2">Sửa</a>
+                    <a href="/admin/orders_detail/${order.order_id}" class="text-blue-500 hover:underline mr-2">Xem chi tiết</a>
+                    <form action="/admin/orders/${order.order_id}/accept" method="POST" style="display:inline;">
+                        <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')}">
+                        <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-700">Chấp nhận</button>
+                    </form>
                     <form action="/admin/orders/${order.order_id}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
                         <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')}">
                         <input type="hidden" name="_method" value="DELETE">
@@ -128,7 +139,6 @@
         });
 
     </script>
-
 
 
 @endsection

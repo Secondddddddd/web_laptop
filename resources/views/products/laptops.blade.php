@@ -17,6 +17,8 @@
         <!-- Danh sách Laptop -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             @forelse ($products as $product)
+                @continue($product->quantity == 0) {{-- Bỏ qua sản phẩm nếu số lượng bằng 0 --}}
+
                 <div class="border p-4 rounded shadow bg-white flex flex-col items-center">
                     <img src="{{ asset('img/'.$product->image_url) }}"
                          alt="{{ $product->name }}"
@@ -30,8 +32,9 @@
                     </a>
                 </div>
             @empty
-                <p class="col-span-6 text-gray-500 text-center">Không có sản phẩm nào.</p>
+                <p class="text-center text-gray-500">Không có sản phẩm nào để hiển thị.</p>
             @endforelse
+
         </div>
     </div>
 @endsection

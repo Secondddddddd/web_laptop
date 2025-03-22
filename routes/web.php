@@ -41,6 +41,11 @@ Route::prefix('admin')->group(function () {
     Route::get('/suppliers/create', [AdminController::class, 'createSupplier'])->name('admin_supplier_add');
     Route::post('/suppliers', [AdminController::class, 'storeSupplier'])->name('admin_supplier_store');
     Route::get('/orders',[AdminController::class, 'orderList'])->name('admin_order_list');
+    Route::delete('/orders/{order}', [AdminController::class, 'destroyOrder'])->name('admin.orders.destroy');
+    Route::get('/orders_detail/{order_id}', [OrderController::class, 'show'])->name('admin.orders.show');
+    Route::post('/orders/{order_id}/accept', [OrderController::class, 'acceptOrder'])->name('admin.orders.accept');
+
+
 });
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

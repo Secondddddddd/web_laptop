@@ -17,6 +17,8 @@
         <!-- Danh sách phụ kiện -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             @forelse ($products as $product)
+                @continue($product->quantity == 0) {{-- Bỏ qua sản phẩm nếu số lượng bằng 0 --}}
+
                 <div class="border p-4 rounded shadow bg-white flex flex-col items-center">
                     <img src="{{ asset('img/'.$product->image_url) }}"
                          alt="{{ $product->name }}"
@@ -24,12 +26,13 @@
 
                     <h3 class="text-lg font-bold text-center">{{ $product->name }}</h3>
                     <p class="text-gray-600 text-center">Giá: {{ number_format($product->price, 0, ',', '.') }} VNĐ</p>
-                    <a href="
-                    {{ route('product.detail', ['product_id' => $product->product_id, 'product_slug' => Str::slug($product->name)]) }}
-                    " class="text-blue-500 mt-2 block">Xem chi tiết</a>
+                    <a href="{{ route('product.detail', ['product_id' => $product->product_id, 'product_slug' => Str::slug($product->name)]) }}"
+                       class="text-blue-500 mt-2 block">
+                        Xem chi tiết
+                    </a>
                 </div>
             @empty
-                <p class="col-span-6 text-gray-500 text-center">Không có phụ kiện nào.</p>
+                <p class="text-center text-gray-500">Không có sản phẩm nào để hiển thị.</p>
             @endforelse
         </div>
 

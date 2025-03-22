@@ -75,8 +75,6 @@ class OrderController extends Controller
 
     public function ProcessCheckoutCart(Request $request)
     {
-//        dd($request->all());
-
         if (!auth()->check()) {
             return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thanh toán.');
         }
@@ -87,6 +85,7 @@ class OrderController extends Controller
             ($address->ward->full_name ?? '') . ', ' .
             ($address->district->full_name ?? '') . ', ' .
             ($address->province->full_name ?? '');
+
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Giỏ hàng trống!');
         }
@@ -96,7 +95,6 @@ class OrderController extends Controller
             return redirect()->route('cart.index')->with('error', 'Không có sản phẩm nào được chọn để thanh toán.');
         }
 
-        // Bắt đầu transaction
         DB::beginTransaction();
 
         try {
@@ -115,23 +113,36 @@ class OrderController extends Controller
                 'order_status' => 'pending'
             ]);
 
-            // Thêm chi tiết đơn hàng
+            // Thêm chi tiết đơn hàng và cập nhật số lượng sản phẩm
             foreach ($selectedProducts as $product) {
                 $productData = $cart[$product['id']] ?? null;
                 if ($productData) {
-                    OrderDetail::create([
-                        'order_id' => $order->order_id,
-                        'product_id' => $product['id'],
-                        'quantity' => $product['quantity'],
-                        'unit_price' => $productData['price']
-                    ]);
+                    // Lấy sản phẩm từ database
+                    $dbProduct = Product::find($product['id']);
 
-                    // Xóa sản phẩm này khỏi giỏ hàng
-                    unset($cart[$product['id']]);
+                    // Kiểm tra nếu sản phẩm có tồn tại và đủ số lượng
+                    if ($dbProduct && $dbProduct->stock_quantity >= $product['quantity']) {
+                        OrderDetail::create([
+                            'order_id' => $order->order_id,
+                            'product_id' => $product['id'],
+                            'quantity' => $product['quantity'],
+                            'unit_price' => $productData['price']
+                        ]);
+
+                        // Trừ số lượng sản phẩm
+                        $dbProduct->stock_quantity -= $product['quantity'];
+                        $dbProduct->save();
+
+                        // Xóa sản phẩm này khỏi giỏ hàng
+                        unset($cart[$product['id']]);
+                    } else {
+                        DB::rollBack();
+                        return redirect()->route('cart.index')->with('error', "Sản phẩm {$dbProduct->name} không đủ số lượng!");
+                    }
                 }
             }
 
-            // Cập nhật lại giỏ hàng trong session sau khi xóa các sản phẩm đã thanh toán
+            // Cập nhật lại giỏ hàng trong session
             session()->put('cart', $cart);
 
             DB::commit();
@@ -144,5 +155,26 @@ class OrderController extends Controller
         }
     }
 
+
+    public function show($order_id)
+    {
+        $order = Order::with(['user', 'orderDetails.product'])->findOrFail($order_id);
+        return view('admin.order.show', compact('order'));
+    }
+
+    public function acceptOrder($order_id)
+    {
+        // Lấy đơn hàng theo ID
+        $order = Order::where('order_id', $order_id)->where('order_status', 'pending')->first();
+
+        if (!$order) {
+            return redirect()->back()->with('error', 'Không tìm thấy đơn hàng hoặc đơn hàng không ở trạng thái chờ xác nhận.');
+        }
+
+        // Cập nhật trạng thái đơn hàng thành "processing"
+        $order->update(['order_status' => 'processing']);
+
+        return redirect()->back()->with('success', 'Đơn hàng đã được chấp nhận và đang xử lý.');
+    }
 
 }

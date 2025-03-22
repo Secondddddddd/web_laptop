@@ -470,4 +470,13 @@ class AdminController extends Controller
 
         return response()->json($orders);
     }
+
+    public function destroyOrder($id)
+    {
+        $order = Order::findOrFail($id); // Tìm đơn hàng
+        $order->delete(); // Xóa đơn hàng
+
+        return redirect()->route('admin_order_list')->with('success', 'Đã xóa đơn hàng.');
+    }
+
 }
