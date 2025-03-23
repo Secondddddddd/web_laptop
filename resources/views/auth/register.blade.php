@@ -40,7 +40,7 @@
             <div class="mb-4 relative">
                 <label class="block text-gray-600 mb-1">Mật khẩu</label>
                 <input type="password" id="password" name="password" class="password_input w-full p-3 border rounded pr-10" placeholder="Nhập mật khẩu" required>
-                <button type="button" id="togglePassword" class="absolute inset-y-0 right-3 top-5 flex items-center justify-center text-gray-500 text-3xl">
+                <button type="button" class="toggle-password-btn absolute inset-y-0 right-3 top-5 flex items-center justify-center text-gray-500 text-3xl">
                     🐵
                 </button>
             </div>
@@ -48,7 +48,7 @@
             <div class="mb-4 relative">
                 <label class="block text-gray-600 mb-1">Xác nhận mật khẩu</label>
                 <input type="password" name="password_confirmation" class="password_input w-full p-3 border rounded" placeholder="Nhập lại mật khẩu" required>
-                <button type="button" id="togglePassword" class="absolute inset-y-0 right-3 top-5 flex items-center justify-center text-gray-500 text-3xl">
+                <button type="button" class="toggle-password-btn absolute inset-y-0 right-3 top-5 flex items-center justify-center text-gray-500 text-3xl">
                     🐵
                 </button>
             </div>
@@ -75,20 +75,23 @@
     </div>
 </div>
 
-<!-- Script hiển thị/ẩn mật khẩu -->
 <script>
-    document.querySelectorAll('#togglePassword').forEach((item)=>{
-        item.addEventListener('click', function () {
-            const passwordField = document.querySelector('.password_input');
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
+    document.querySelectorAll('.toggle-password-btn').forEach((button) => {
+        button.addEventListener('click', function () {
+            // Tìm input password trong cùng container cha
+            const container = this.closest('.relative');
+            const passwordInput = container.querySelector('input[type="password"], input[type="text"]');
+
+            // Toggle type và icon
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
                 this.textContent = '🙈';
             } else {
-                passwordField.type = 'password';
+                passwordInput.type = 'password';
                 this.textContent = '🐵';
             }
         });
-    })
+    });
 </script>
 
 </body>

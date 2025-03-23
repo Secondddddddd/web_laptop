@@ -92,6 +92,11 @@ Route::prefix('api')->group(function () {
     Route::get('/api/districts/{province_code}', [AddressController::class, 'getDistricts']);
     Route::get('/api/wards/{district_code}', [AddressController::class, 'getWards']);
     Route::post('/user/address/store', [UserController::class, 'store'])->name('address.store');
+    Route::post('/order/cancel/{id}', [OrderController::class, 'cancelOrder'])->name('order.cancel');
+    Route::get('/order/detail/{id}', [OrderController::class, 'showDetail'])->name('order.detail');
+    Route::post('/user/change_password',[AuthController::class,'changePassword'])->name('user.change_password');
+    Route::put('/user/update-info', [UserController::class, 'updateInfo'])->name('user.update_info');
 
     Route::post('/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
     Route::post('/checkout', [OrderController::class, 'checkoutSubmitBuyNow'])->name('order.checkout_submit');
+    Route::delete('/address/{id}', [AddressController::class, 'destroy'])->name('address.destroy');

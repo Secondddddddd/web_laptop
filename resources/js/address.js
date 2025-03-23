@@ -49,6 +49,30 @@ document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('addressModal');
         modal.classList.toggle('hidden');
     };
+
+    window.deleteAddress = function (addressId) {
+        if (!confirm("Bạn có chắc chắn muốn xóa địa chỉ này?")) return;
+
+        fetch(`/address/${addressId}`, {
+            method: "DELETE",
+            headers: {
+                "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                "Content-Type": "application/json",
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Địa chỉ đã được xóa thành công.");
+                    location.reload(); // Reload lại danh sách địa chỉ
+                } else {
+                    alert(data.error || "Có lỗi xảy ra, vui lòng thử lại.");
+                }
+            })
+            .catch(error => console.error("Lỗi:", error));
+    };
+
+
 });
 
 

@@ -1,14 +1,6 @@
 @vite(['resources/js/address.js'])
 
-@if ($errors->any())
-    <div class="bg-red-100 text-red-700 p-3 rounded mb-3">
-        <ul class="list-disc list-inside">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+<x-alert-result />
 
 <div class="p-5 bg-white rounded-lg shadow-md h-full">
     <h2 class="text-2xl font-semibold mb-4">Danh sách địa chỉ</h2>
@@ -37,8 +29,9 @@
                         @endif
                     </span>
                     <div class="space-x-2">
-                        <button class="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500">Sửa</button>
-                        <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Xóa</button>
+                        <button onclick="deleteAddress({{ $address->id }})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                            Xóa
+                        </button>
                     </div>
                 </li>
             @endforeach
@@ -86,7 +79,8 @@
                 </div>
                 <div>
                     <label class="inline-flex items-center">
-                        <input type="checkbox" name="is_default" class="form-checkbox rounded text-blue-600 focus:ring-blue-500">
+                        <input type="hidden" name="is_default" value="0">
+                        <input type="checkbox" name="is_default" value="1" class="form-checkbox rounded text-blue-600 focus:ring-blue-500">
                         <span class="ml-2">Đặt làm địa chỉ mặc định</span>
                     </label>
                 </div>
@@ -96,6 +90,4 @@
             </form>
         </div>
     </div>
-
-
 </div>

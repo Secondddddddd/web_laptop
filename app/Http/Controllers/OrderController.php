@@ -177,4 +177,31 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Đơn hàng đã được chấp nhận và đang xử lý.');
     }
 
+    public function showDetail($id)
+    {
+        $order = Order::where('user_id', Auth::id())->with('orderDetails.product')->findOrFail($id);
+        return view('user.order-detail', compact('order'));
+    }
+
+    public function cancelOrder($id)
+    {
+        $order = Order::where('user_id', Auth::id())->where('order_status', 'pending')->findOrFail($id);
+
+        DB::beginTransaction();
+        try {
+            // Cập nhật trạng thái đơn hàng thành "cancelled"
+            $order->update(['order_status' => 'cancelled']);
+
+            // Hoàn trả lại số lượng sản phẩm
+            foreach ($order->orderDetails as $detail) {
+                $detail->product->increment('stock_quantity', $detail->quantity);
+            }
+
+            DB::commit();
+            return response()->json(['success' => true, 'message' => 'Đơn hàng đã bị hủy.']);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 }

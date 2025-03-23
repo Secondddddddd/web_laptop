@@ -1,5 +1,10 @@
 <div class="mt-5">
+
+    <x-alert-result />
+
+
     <h2 class="text-2xl font-semibold mb-4 text-center">Đổi mật khẩu</h2>
+
     <form action="{{ $action }}" method="POST" class="space-y-4 ml-5">
         @csrf
 

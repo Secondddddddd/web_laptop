@@ -10,6 +10,8 @@
     </div>
 @endif
 
+
+
 <script>
     function closeAlert(alertId) {
         document.getElementById(alertId).style.display = 'none';
