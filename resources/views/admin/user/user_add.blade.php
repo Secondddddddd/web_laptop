@@ -44,7 +44,7 @@
 
             <div class="mb-4">
                 <label class="block font-semibold">Số điện thoại:</label>
-                <input type="text" name="phone" class="w-full border rounded p-2">
+                <input type="text" name="phone" class="w-full border rounded p-2" required>
             </div>
 
 
@@ -54,6 +54,7 @@
                     <option value="customer">Khách hàng</option>
                     <option value="admin">Admin</option>
                     <option value="staff">Nhân viên</option>
+                    <option value="shipper">Shipper</option>
                 </select>
             </div>
 

@@ -11,7 +11,7 @@
         <button class="mr-2 btn btn-info filter-btn active" data-status="pending">Chờ xác nhận</button>
         <button class="mr-2 btn btn-info btn-outline filter-btn" data-status="processing">Đang xử lý</button>
         <button class="mr-2 btn btn-info btn-outline filter-btn" data-status="shipped">Đã giao</button>
-        <button class="btn btn-info btn-outline filter-btn" data-status="delivered">Đã nhận</button>
+        <button class="btn btn-info btn-outline filter-btn" data-status="delivered">Đã hủy</button>
     </div>
 
     <div class="overflow-x-auto">

@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const supplier = document.querySelector('.suppliers-manage');
     const order = document.querySelector('.orders-manage');
     const addProductBtn = document.querySelector('.add-product-btn');
+    const shipper = document.querySelector('.shipper-list');
+
     product.addEventListener("click", ()=>{
         window.location.href = "/admin/product";
     });
@@ -14,7 +16,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     });
 
     account.addEventListener("click", ()=>{
-        window.location.href = "/admin/users";
+        window.location.href = "/admin/users-list";
     });
 
     supplier.addEventListener("click", ()=>{
@@ -23,8 +25,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     order.addEventListener("click", ()=>{
         window.location.href = "/admin/orders";
-    })
+    });
 
+    shipper.addEventListener('click', ()=>{
+        window.location.href = "/admin/shipper-list"
+    })
 
     if (addProductBtn){
         addProductBtn.addEventListener("click", ()=>{

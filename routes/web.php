@@ -28,7 +28,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/category/{id}/edit', [AdminController::class, 'editCategory'])->name('admin_category_edit');
     Route::put('/category/{id}', [AdminController::class, 'updateCategory'])->name('admin_category_update');
     Route::delete('/category/{id}', [AdminController::class, 'destroyCategory'])->name('admin_category_delete');
-    Route::get('/users', [AdminController::class, 'userList'])->name('admin_user_list');
+    Route::get('/users-list', [AdminController::class, 'userList'])->name('admin_user_list');
     Route::get('/users/create', [AdminController::class, 'showAddUserForm'])->name('admin_user_add');
     Route::get('/users/{id}', [AdminController::class, 'userDetail'])->name('admin_user_detail')->where('id', '[0-9]+');
     Route::post('/users/{id}/disable', [AdminController::class, 'disableUser'])->name('admin_user_disable');
@@ -44,15 +44,21 @@ Route::prefix('admin')->group(function () {
     Route::delete('/orders/{order}', [AdminController::class, 'destroyOrder'])->name('admin.orders.destroy');
     Route::get('/orders_detail/{order_id}', [OrderController::class, 'show'])->name('admin.orders.show');
     Route::post('/orders/{order_id}/accept', [OrderController::class, 'acceptOrder'])->name('admin.orders.accept');
+    Route::get('/users', [AdminController::class, 'getUsers'])->name('admin.users.json');
 
+    Route::get('/shipper-list', [AdminController::class, 'shipperList'])->name('admin.shipper_list');
+    Route::get('/shippers/activate/{id}', [AdminController::class, 'acceptShipper'])->name('admin.shippers.activate');
 
 });
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login_submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register_submit');
+Route::get('/register_customer', [AuthController::class, 'showRegisterForm'])->name('register_customer');
+Route::post('/register_customer', [AuthController::class, 'register'])->name('register_customer_submit');
+Route::get('/register_shipper', [AuthController::class, 'showRegisterShipperForm'])->name('register_shipper');
+Route::post('/register_shipper', [AuthController::class, 'registerShipper'])->name('register_shipper_submit');
+
 Route::get('/forgot-password', [AuthController::class, 'showForm'])->name('password.request');
 Route::post('/forgot-password', [AuthController::class, 'verifyEmail'])->name('password.verify');
 Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('password.reset');
@@ -86,17 +92,23 @@ Route::prefix('api')->group(function () {
     Route::get('/admin/categories', [AdminController::class, 'api_category_list'])->name('admin.api.category.list');
     Route::get('/admin/suppliers', [AdminController::class, 'apiSupplierList']);
     Route::get('/admin/orders',[AdminController::class,'getOrders'])->name('admin.order.list');
+    Route::get('/districts/{province_code}', [AddressController::class, 'getDistricts']);
+    Route::get('/wards/{district_code}', [AddressController::class, 'getWards']);
+    Route::get('/admin/shippers/json', [AdminController::class, 'getShippersJson'])->name('admin.shippers.json');
+    Route::get('/admin/shippers/detail/{user_id}', [AdminController::class, 'getShipperDetail']);
+
 });
 
     Route::get('/user/info',[UserController::class, 'showUserInfo'])->name('user.info');
-    Route::get('/api/districts/{province_code}', [AddressController::class, 'getDistricts']);
-    Route::get('/api/wards/{district_code}', [AddressController::class, 'getWards']);
+
     Route::post('/user/address/store', [UserController::class, 'store'])->name('address.store');
     Route::post('/order/cancel/{id}', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     Route::get('/order/detail/{id}', [OrderController::class, 'showDetail'])->name('order.detail');
     Route::post('/user/change_password',[AuthController::class,'changePassword'])->name('user.change_password');
     Route::put('/user/update-info', [UserController::class, 'updateInfo'])->name('user.update_info');
+    Route::get('user/order/details/{order}', [OrderController::class, 'getOrderDetails'])->name('order.details');
 
-    Route::post('/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
+
+Route::post('/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
     Route::post('/checkout', [OrderController::class, 'checkoutSubmitBuyNow'])->name('order.checkout_submit');
     Route::delete('/address/{id}', [AddressController::class, 'destroy'])->name('address.destroy');

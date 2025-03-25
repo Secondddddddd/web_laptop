@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
@@ -204,4 +205,28 @@ class OrderController extends Controller
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+    public function getOrderDetails(Order $order)
+    {
+        // Tải quan hệ orderDetails và product cho đơn hàng
+        $order->load('orderDetails.product');
+        $data = [
+            'order_id' => $order->order_id,
+            'total_price' => number_format($order->total_price, 0, ',', '.'),
+            'payment_method' => $order->payment_method,
+            'order_status' => $order->order_status,
+            'created_at' => $order->created_at->format('d/m/Y H:i'),
+            'otp_code' => $order->otp_code,
+            'items' => $order->orderDetails->map(function($detail) {
+                return [
+                    'name' => $detail->product->name,
+                    'quantity' => $detail->quantity,
+                    'unit_price' => number_format($detail->unit_price, 0, ',', '.'),
+                    'image' => $detail->product->image_url, // Thêm thông tin hình ảnh sản phẩm
+                ];
+            }),
+        ];
+        return response()->json($data);
+    }
+
 }

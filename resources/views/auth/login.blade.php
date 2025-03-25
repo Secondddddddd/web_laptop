@@ -59,7 +59,8 @@
 
         <div class="flex justify-between items-center mt-4">
             <a href="{{route('password.request')}}" class="text-blue-500 hover:underline">Quên mật khẩu?</a>
-            <a href="{{route('register')}}" class="text-blue-500 hover:underline">Đăng ký</a>
+            <a href="{{route('register_customer')}}" class="text-blue-500 hover:underline">Đăng ký tài khoản khách hàng</a>
+            <a href="{{route('register_shipper')}}" class="text-blue-500 hover:underline">Đăng ký tài khoản shipper</a>
         </div>
 
     </div>

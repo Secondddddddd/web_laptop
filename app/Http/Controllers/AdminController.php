@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ShipperActivatedMail;
+
 
 use App\Models\Product;
 use App\Models\Category;
@@ -293,9 +296,18 @@ class AdminController extends Controller
 
     public function userList()
     {
-        $users = User::select('user_id', 'full_name', 'email', 'phone', 'role', 'avatar', 'created_at')->paginate(10);
-        return view('admin.user.user_list', compact('users'));
+        return view('admin.user.user_list');
     }
+
+    public function getUsers()
+    {
+        $users = User::select('user_id', 'full_name', 'email', 'phone', 'created_at')
+            ->where('role', 'customer')
+            ->get();
+
+        return response()->json($users);
+    }
+
 
     public function userDetail($id)
     {
@@ -316,10 +328,13 @@ class AdminController extends Controller
             'full_name' => 'required|string|max:100',
             'email' => 'required|email|unique:users,email|max:100',
             'password' => 'required|min:6',
-            'phone' => 'nullable|string|max:15',
+            'phone' => 'required|string|regex:/^0[0-9]{9}$/|unique:users,phone',
             'role' => 'required|in:customer,admin,staff',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
+
+        // Chuẩn hóa số điện thoại
+        $phone = preg_replace('/\D/', '', $request->phone); // Loại bỏ ký tự không phải số
 
         // Xử lý avatar
         if ($request->hasFile('avatar')) {
@@ -334,13 +349,14 @@ class AdminController extends Controller
             'full_name' => $request->full_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'phone' => $request->phone,
+            'phone' => $phone,
             'role' => $request->role,
             'avatar' => $avatarName
         ]);
 
         return redirect()->route('admin_user_add')->with('success', 'Thêm người dùng thành công!');
     }
+
 
     public function disableUser($id)
     {
@@ -478,5 +494,57 @@ class AdminController extends Controller
 
         return redirect()->route('admin_order_list')->with('success', 'Đã xóa đơn hàng.');
     }
+
+    public function shipperList()
+    {
+        return view('admin.user.shipper_list');
+    }
+
+    public function getShippersJson(Request $request)
+    {
+        // Lấy trạng thái từ query, mặc định là pending (chờ xác nhận)
+        $status = $request->query('status', 'pending');
+
+        $shippers = User::select('user_id', 'full_name', 'email', 'phone', 'avatar', 'status', 'created_at')
+            ->where('role', 'shipper')
+            ->where('status', $status)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($shippers);
+    }
+
+    public function getShipperDetail($user_id)
+    {
+        $shipper = User::where('role', 'shipper')->findOrFail($user_id);
+
+        // Tùy ý lấy thông tin cần thiết
+        return response()->json([
+            'user_id'    => $shipper->user_id,
+            'full_name'  => $shipper->full_name,
+            'email'      => $shipper->email,
+            'phone'      => $shipper->phone,
+            'status'     => $shipper->status,
+            'created_at' => $shipper->created_at,
+            'avatar'     => $shipper->avatar,
+        ]);
+    }
+
+
+    public function acceptShipper($shipperId)
+    {
+        $shipper = User::findOrFail($shipperId);
+
+        // Cập nhật trạng thái shipper thành active
+        $shipper->status = 'active';
+        $shipper->save();
+
+        // Gửi email thông báo
+        Mail::to($shipper->email)->send(new ShipperActivatedMail($shipper));
+
+
+        return redirect()->back()->with('success', 'Shipper đã được kích hoạt và nhận thông báo.');
+    }
+
 
 }

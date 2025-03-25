@@ -18,14 +18,21 @@
     </div>
 </nav>
 
+@if(session('warning'))
+    <div class="alert alert-warning">
+        {{ session('warning') }}
+    </div>
+@endif
+
+
 <!-- Form Đăng ký -->
-<div class="flex items-center justify-center min-h-screen">
+<div class="flex items-center justify-center mt-5">
     <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Đăng ký tài khoản khách hàng</h2>
+        <h2 class="text-2xl font-semibold text-center text-gray-700 mb-6">Đăng ký tài khoản shipper</h2>
 
         <x-alert-result />
 
-        <form action="{{ route('register_customer_submit') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('register_shipper_submit') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="mb-4">
                 <label class="block text-gray-600 mb-1">Họ và Tên</label>
@@ -55,7 +62,7 @@
 
             <div class="mb-4">
                 <label class="block text-gray-600 mb-1">Số điện thoại</label>
-                <input type="text" name="phone" class="w-full p-3 border rounded" placeholder="Nhập số điện thoại (tùy chọn)">
+                <input type="text" name="phone" class="w-full p-3 border rounded" placeholder="Nhập số điện thoại (tùy chọn)" required>
             </div>
 
 
