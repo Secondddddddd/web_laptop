@@ -60,6 +60,7 @@
                                 <input type="number" name="quantity" id="quantity-product" class="text-center w-full border-x outline-none" min="0" max="{{$product->quantity }}" value="1"/>
                                 <button type="button" class="w-10 h-10 flex items-center justify-center bg-gray-200 hover:bg-gray-300 rounded-r-md" id="btn-increase">+</button>
                             </div>
+                            <div>{{ $product->quantity }} số sản phẩm có sẵn</div>
                             <button type="submit" class="btn btn-primary w-48">Thêm vào giỏ hàng</button>
                         </form>
                         <form action="{{ route('order.buy_now', $product->product_id) }}" id="buy-now-form" method="POST">

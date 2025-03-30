@@ -55,7 +55,12 @@
             </div>
             <div class="flex items-center border-b-2 border-t-2 space-x-3 p-3 shipper-list dashboard-item">
                 <p class="text-xl font-medium">Quản lý tài khoản shipper</p>
-                <i class="fa-solid fa-receipt text-2xl"></i>
+                <i class="fa-solid fa-user text-2xl"></i>
+            </div>
+
+            <div class="flex items-center border-b-2 border-t-2 space-x-3 p-3 staff-list dashboard-item">
+                <p class="text-xl font-medium">Quản lý tài khoản nhân viên</p>
+                <i class="fa-solid fa-user text-2xl"></i>
             </div>
         </div>
     </div>

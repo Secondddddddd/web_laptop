@@ -21,17 +21,15 @@
 
             <!-- Giỏ hàng & Tài khoản -->
             <div class="flex items-center space-x-4 ml-4">
-
-
-
                 <!-- Tài khoản -->
                 @auth
                     <!-- Giỏ hàng -->
                     <a href="{{route('user.cart')}}" class="relative">
                         🛒 <span id="cart-count" class="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 rounded-full">
-                              {{ auth()->check() ? $totalQuantity : 0 }}
-                        </span>
+                {{ auth()->check() ? $totalQuantity : 0 }}
+            </span>
                     </a>
+
                     <div class="relative" id="user-dropdown">
                         <button class="flex items-center space-x-2" id="dropdown-toggle">
                             <img src="{{ asset('avatar/'.Auth::user()->avatar ?? 'avatar/avatar_default.jpg') }}" alt="Avatar" class="w-8 h-8 rounded-full">
@@ -41,6 +39,17 @@
                         <div id="dropdown-menu" class="absolute right-0 w-48 mt-2 bg-white border rounded shadow-lg hidden z-50">
                             <a href="{{route('user.info')}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Thông tin cá nhân</a>
                             <a href="{{route('user.info')}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lịch sử giao dịch</a>
+
+                            @if(Auth::check() && Auth::user()->role === 'shipper')
+                                <a href="{{ route('shipper.orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">
+                                    Đơn giao hàng
+                                </a>
+                                <a href="{{ route('shipper.orders.current') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">
+                                    Đơn hàng đang giao
+                                </a>
+                            @endif
+
+
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button type="submit" id="logout-button" class="w-full text-left block px-4 py-2 text-red-600 hover:bg-gray-200">
@@ -48,7 +57,6 @@
                                 </button>
                             </form>
                         </div>
-
                     </div>
                 @else
                     <!-- Khi chưa đăng nhập -->
@@ -61,6 +69,7 @@
                     </div>
                 @endauth
             </div>
+
         </div>
     </div>
 </nav>

@@ -9,6 +9,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\ShipperOrderController;
+
 
 Route::get('/', function () {
     return view('home_page');
@@ -96,7 +98,9 @@ Route::prefix('api')->group(function () {
     Route::get('/wards/{district_code}', [AddressController::class, 'getWards']);
     Route::get('/admin/shippers/json', [AdminController::class, 'getShippersJson'])->name('admin.shippers.json');
     Route::get('/admin/shippers/detail/{user_id}', [AdminController::class, 'getShipperDetail']);
-
+    Route::get('/shipper/orders', [ShipperOrderController::class, 'getOrdersByStatus'])->name('shipper.orders.json');
+    Route::get('/shipper/orders/{order}/show', [ShipperOrderController::class, 'show'])
+        ->name('shipper.orders.show');
 });
 
     Route::get('/user/info',[UserController::class, 'showUserInfo'])->name('user.info');
@@ -112,3 +116,12 @@ Route::prefix('api')->group(function () {
 Route::post('/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
     Route::post('/checkout', [OrderController::class, 'checkoutSubmitBuyNow'])->name('order.checkout_submit');
     Route::delete('/address/{id}', [AddressController::class, 'destroy'])->name('address.destroy');
+
+Route::middleware(['auth', 'role:shipper'])->group(function () {
+    Route::get('/shipper/orders', [ShipperOrderController::class, 'index'])->name('shipper.orders');
+    Route::post('/shipper/orders/{order}/accept', [ShipperOrderController::class, 'accept'])->name('shipper.orders.accept');
+    Route::get('/shipper/order-in-progress', [ShipperOrderController::class, 'currentOrder'])
+        ->name('shipper.orders.current');
+    Route::post('/shipper/orders/confirm', [ShipperOrderController::class, 'confirmDelivery'])
+        ->name('shipper.orders.confirm');
+});

@@ -72,6 +72,9 @@
         <p class="mt-4 text-center text-gray-600">
             Đã có tài khoản? <a href="{{ route('login') }}" class="text-blue-500 hover:underline">Đăng nhập</a>
         </p>
+        <p class="mt-4 text-center text-gray-600">
+            <a href="{{route('register_shipper')}}" class="text-blue-500 hover:underline">Đăng ký tài khoản cho sipper</a>
+        </p>
     </div>
 </div>
 

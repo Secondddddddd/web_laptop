@@ -20,7 +20,6 @@ class UserController extends Controller
         $addresses = UserAddress::with(['province', 'district', 'ward'])
             ->where('user_id', auth()->id())
             ->get();
-
         // Truyền dữ liệu sang view
         return view('user.user_info', compact('provinces', 'addresses'));
     }

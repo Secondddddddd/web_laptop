@@ -542,7 +542,6 @@ class AdminController extends Controller
         // Gửi email thông báo
         Mail::to($shipper->email)->send(new ShipperActivatedMail($shipper));
 
-
         return redirect()->back()->with('success', 'Shipper đã được kích hoạt và nhận thông báo.');
     }
 

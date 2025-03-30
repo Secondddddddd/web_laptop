@@ -48,7 +48,7 @@ class AuthController extends Controller
                 case 'staff':
                     return redirect()->route('admin_product_list')->with('success', 'Chào mừng nhân viên!');
                 case 'shipper':
-                    return redirect()->route('shipper_dashboard')->with('success', 'Chào mừng shipper!');
+                    return redirect()->route('home')->with('success', 'Chào mừng shipper!');
                 default:
                     Auth::logout();
                     return back()->withErrors(['email' => 'Tài khoản không tồn tại!']);
