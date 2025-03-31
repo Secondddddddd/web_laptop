@@ -12,17 +12,22 @@ use Illuminate\Support\Facades\Storage;
 class UserController extends Controller
 {
 
-    function showUserInfo() {
+    public function showUserInfo() {
         // Lấy danh sách tỉnh/thành phố
-        $provinces = Province::all(); // Lấy tất cả các tỉnh/thành phố
+        $provinces = Province::all();
 
         // Lấy danh sách địa chỉ của user hiện tại
         $addresses = UserAddress::with(['province', 'district', 'ward'])
             ->where('user_id', auth()->id())
             ->get();
+
+        // Lấy activeComponent từ query string, mặc định là 'user-info'
+        $activeComponent = request('active', 'user-info');
+
         // Truyền dữ liệu sang view
-        return view('user.user_info', compact('provinces', 'addresses'));
+        return view('user.user_info', compact('provinces', 'addresses', 'activeComponent'));
     }
+
 
     public function store(Request $request)
     {

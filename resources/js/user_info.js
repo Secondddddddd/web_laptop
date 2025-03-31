@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const addressComponent = document.querySelector(".address-component");
     const changePasswordComponent = document.querySelector(".change-password");
     const transactionHistoryComponent = document.querySelector(".transaction-history");
-
+    const active = document.querySelector('.activeComponent').innerText;
     // Menu items
     const menuItems = document.querySelectorAll("#profile-menu .menu-item");
 
@@ -50,8 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Khi trang tải, kiểm tra localStorage để hiển thị component đã chọn (nếu có)
-    const activeComponent = localStorage.getItem("activeComponent") || "user-info";
-    showComponent(activeComponent);
+    // const activeComponent = localStorage.getItem("activeComponent") || ;
+    showComponent(active);
 
     // Gán sự kiện cho từng menu item
     menuItems.forEach(item => {

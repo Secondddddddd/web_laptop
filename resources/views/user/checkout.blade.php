@@ -59,7 +59,7 @@
                     </select>
                 @else
                     <p>Bạn chưa có địa chỉ nào.
-                        <a class="text-blue-500 hover:underline" href="{{route('user.info')}}">Hãy thêm địa chỉ giao hàng</a>
+                        <a class="text-blue-500 hover:underline" href="{{ route('user.info', ['active' => 'address']) }}">Hãy thêm địa chỉ giao hàng</a>
                     </p>
                 @endif
             </div>

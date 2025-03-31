@@ -37,8 +37,8 @@
                         </button>
 
                         <div id="dropdown-menu" class="absolute right-0 w-48 mt-2 bg-white border rounded shadow-lg hidden z-50">
-                            <a href="{{route('user.info')}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Thông tin cá nhân</a>
-                            <a href="{{route('user.info')}}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lịch sử giao dịch</a>
+                            <a href="{{ route('user.info', ['active' => 'user-info']) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Thông tin cá nhân</a>
+                            <a href="{{ route('user.info', ['active' => 'transaction-history']) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Lịch sử giao dịch</a>
 
                             @if(Auth::check() && Auth::user()->role === 'shipper')
                                 <a href="{{ route('shipper.orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">

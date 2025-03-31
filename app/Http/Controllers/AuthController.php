@@ -44,7 +44,7 @@ class AuthController extends Controller
                 case 'admin':
                     return redirect()->route('admin_dashboard')->with('success', 'Đăng nhập thành công!');
                 case 'customer':
-                    return redirect(session('url.intended', '/'))->with('success', 'Chào mừng bạn trở lại!');
+                    return redirect()->route('home')->with('success', 'Chào mừng bạn trở lại!');
                 case 'staff':
                     return redirect()->route('admin_product_list')->with('success', 'Chào mừng nhân viên!');
                 case 'shipper':

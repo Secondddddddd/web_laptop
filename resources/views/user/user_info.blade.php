@@ -6,6 +6,8 @@
 
     @vite(['resources/js/user_info.js'])
 
+    <p class="hidden activeComponent">{{$activeComponent ? $activeComponent : ""}}</p>
+
     <div class="flex h-auto border shadow">
         <!-- Cột trái (Menu điều hướng) -->
         <div class="w-1/4 border-r-2">
