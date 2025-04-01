@@ -76,8 +76,8 @@ class OrderController extends Controller
 
     public function ProcessCheckoutCart(Request $request)
     {
-        if (!auth()->check()) {
-            return redirect()->route('login')->with('error', 'Bạn cần đăng nhập để thanh toán.');
+        if(!$request->input('address_id')){
+            return redirect()->route('cart.checkout')->with('error', 'Chưa có địa chỉ giao hàng!');
         }
 
         $cart = session()->get('cart', []);

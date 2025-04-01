@@ -1,25 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
+
 use App\Mail\ShipperActivatedMail;
-
-
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
-use App\Models\Order;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
-
-class AdminController extends Controller
+class StaffController extends Controller
 {
-    //
-    function index()
-    {
+    function index(){
+        $user = Auth::user();
         $userCount = User::count();
 
         // Tính tổng số lượng sản phẩm thay vì chỉ đếm số loại sản phẩm
@@ -42,48 +39,37 @@ class AdminController extends Controller
                 ];
             });
 
-        return view('admin.admin', compact(
+        return view('staff.staff', compact(
             'userCount',
             'productCount', // Giờ đã là tổng số lượng sản phẩm
             'supplierCount',
             'completedOrders',
-            'monthlyRevenue'
+            'monthlyRevenue',
+            'user'
         ));
     }
 
-    public function getProductListApi()
-    {
-        $products = Product::with(['category', 'supplier'])->get(); // Lấy tất cả (hoặc giới hạn nếu cần)
-        return response()->json($products);
-    }
-
     function product_list()
-        {
-            return view('admin.product.product_list');
-        }
+    {
+        return view('staff.product.product_list');
+    }
 
     function category_list()
     {
-        return view('admin.category.category_list');
+        return view('staff.category.category_list');
     }
-
-    public function api_category_list()
-    {
-        $categories = Category::all();
-
-        return response()->json($categories);
-    }
-
 
     public function create()
     {
         $categories = Category::all();
         $suppliers = Supplier::all();
-        return view('admin.product.create_product', ['categories'=>$categories, 'suppliers'=>$suppliers]);
+        return view('staff.product.create_product', ['categories'=>$categories, 'suppliers'=>$suppliers]);
     }
 
     public function store(Request $request)
     {
+//        dd($request);
+
         try {
             // Validate dữ liệu với thông báo tùy chỉnh
             $request->validate([
@@ -124,9 +110,12 @@ class AdminController extends Controller
             ]);
 
             // Trả về trang danh sách với thông báo thành công
-            return redirect()->route('admin_product_add')->with('success', 'Sản phẩm đã được thêm thành công!');
+            return redirect()->route('staff_product_add')->with('success', 'Sản phẩm đã được thêm thành công!');
         }catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Thêm sản phẩm thất bại! Vui lòng thử lại.');
+            logger()->error($e); // Ghi log lỗi
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Lỗi: '.$e->getMessage()); // Hiển thị chi tiết lỗi
         }
 
 
@@ -139,7 +128,7 @@ class AdminController extends Controller
         $categories = Category::all();
         $suppliers = Supplier::all();
 
-        return view('admin.product.edit', ['product'=>$product, 'categories'=>$categories, 'suppliers'=>$suppliers]);
+        return view('staff.product.edit', ['product'=>$product, 'categories'=>$categories, 'suppliers'=>$suppliers]);
     }
 
     public function update(Request $request, $id)
@@ -195,7 +184,7 @@ class AdminController extends Controller
 
 
 
-            return redirect()->route('admin_product_edit', ['product_id' => $id])->with('success', 'Sản phẩm đã được cập nhật thành công!');
+            return redirect()->route('staff_product_edit', ['product_id' => $id])->with('success', 'Sản phẩm đã được cập nhật thành công!');
         } catch (\Exception $e) {
             Log::error('Update failed:', ['error' => $e->getMessage()]); // Log lỗi
             return redirect()->back()->with('error', 'Cập nhật sản phẩm thất bại! Vui lòng thử lại.');
@@ -218,7 +207,7 @@ class AdminController extends Controller
             // Xóa sản phẩm
             $product->delete();
 
-            return redirect()->route('admin_product_list')->with('success', 'Sản phẩm đã được xóa thành công!');
+            return redirect()->route('staff_product_list')->with('success', 'Sản phẩm đã được xóa thành công!');
         } catch (\Exception $e) {
             Log::error('Xóa sản phẩm thất bại:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Xóa sản phẩm thất bại! Vui lòng thử lại.');
@@ -228,7 +217,7 @@ class AdminController extends Controller
     // Hiển thị form thêm thể loại
     public function createCategory()
     {
-        return view('admin.category.category_add');
+        return view('staff.category.category_add');
     }
 
     // Xử lý thêm thể loại
@@ -243,7 +232,7 @@ class AdminController extends Controller
                 'name' => $request->name,
             ]);
 
-            return redirect()->route('admin_category_add')->with('success', 'Thể loại đã được thêm thành công!');
+            return redirect()->route('staff_category_add')->with('success', 'Thể loại đã được thêm thành công!');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Thêm thể loại thất bại! Vui lòng thử lại.');
         }
@@ -252,7 +241,7 @@ class AdminController extends Controller
     public function editCategory($id)
     {
         $category = Category::findOrFail($id);
-        return view('admin.category.category_edit', compact('category'));
+        return view('staff.category.category_edit', compact('category'));
     }
 
     public function updateCategory(Request $request, $id)
@@ -270,7 +259,7 @@ class AdminController extends Controller
                 'name' => $request->name,
             ]);
 
-            return redirect()->route('admin_category_edit', ['id' => $id])->with('success', 'Thể loại đã được cập nhật thành công!');
+            return redirect()->route('staff_category_edit', ['id' => $id])->with('success', 'Thể loại đã được cập nhật thành công!');
         } catch (\Exception $e) {
             Log::error('Fail', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Cập nhật thể loại thất bại! Vui lòng thử lại.');
@@ -287,148 +276,33 @@ class AdminController extends Controller
             $category = Category::findOrFail($id);
             $category->delete();
 
-            return redirect()->route('admin_category_list')->with('success', 'Danh mục đã được xóa và các sản phẩm đã được chuyển sang "Không danh mục"!');
+            return redirect()->route('staff_category_list')->with('success', 'Danh mục đã được xóa và các sản phẩm đã được chuyển sang "Không danh mục"!');
         } catch (\Exception $e) {
             Log::error('Xóa danh mục thất bại:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Xóa danh mục thất bại! Vui lòng thử lại.');
         }
     }
 
-    public function userList()
-    {
-        return view('admin.user.user_list');
-    }
-
-    public function getUsers()
-    {
-        $users = User::select('user_id', 'full_name', 'email', 'phone', 'created_at')
-            ->where('role', 'customer')
-            ->get();
-
-        return response()->json($users);
-    }
-
-
-    public function userDetail($id)
-    {
-        $user = User::where('user_id', $id)->firstOrFail();
-        return view('admin.user.user_detail', compact('user'));
-    }
-
-    public function showAddUserForm()
-    {
-        // Debug
-        return view('admin.user.user_add');
-    }
-
-
-    public function storeUser(Request $request)
-    {
-        $request->validate([
-            'full_name' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email|max:100',
-            'password' => 'required|min:6',
-            'phone' => 'required|string|regex:/^0[0-9]{9}$/|unique:users,phone',
-            'role' => 'required|in:customer,admin,staff',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
-
-        // Chuẩn hóa số điện thoại
-        $phone = preg_replace('/\D/', '', $request->phone); // Loại bỏ ký tự không phải số
-
-        // Xử lý avatar
-        if ($request->hasFile('avatar')) {
-            $avatarName = time() . '.' . $request->avatar->extension();
-            $request->avatar->move(public_path('avatar'), $avatarName);
-        } else {
-            $avatarName = 'avatar_default.jpg';
-        }
-
-        // Tạo user
-        User::create([
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone' => $phone,
-            'role' => $request->role,
-            'avatar' => $avatarName
-        ]);
-
-        return redirect()->route('admin_user_add')->with('success', 'Thêm người dùng thành công!');
-    }
-
-
-    public function disableUser($id)
-    {
-        try {
-            $user = User::where('user_id', $id)->firstOrFail();
-            $user->update(['status' => 'inactive']);
-
-            return redirect()->route('admin_user_list')->with('success', 'Tài khoản đã bị vô hiệu hóa!');
-        } catch (\Exception $e) {
-            Log::error('Lỗi khi vô hiệu hóa tài khoản', ['error' => $e->getMessage()]);
-            return redirect()->back()->with('error', 'Vô hiệu hóa tài khoản thất bại! Vui lòng thử lại.');
-        }
-    }
-
-    public function editUser($id)
-    {
-        $user = User::findOrFail($id);
-        return view('admin.user.user_edit', compact('user'));
-    }
-
-    public function updateUser(Request $request, $id)
-    {
-        $request->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $id . ',user_id',
-            'phone' => 'nullable|string|max:15',
-            'role' => 'required|in:customer,admin,staff',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ], [
-            'full_name.required' => 'Vui lòng nhập họ và tên.',
-            'email.required' => 'Vui lòng nhập email.',
-            'email.unique' => 'Email đã tồn tại.',
-            'role.required' => 'Vui lòng chọn vai trò.',
-        ]);
-
-        try {
-            $user = User::findOrFail($id);
-
-            // Cập nhật ảnh đại diện nếu có tải lên
-            if ($request->hasFile('avatar')) {
-                $avatarName = time() . '.' . $request->avatar->extension();
-                $request->avatar->move(public_path('avatar'), $avatarName);
-                $user->avatar = $avatarName;
-            }
-
-            // Cập nhật thông tin người dùng
-            $user->update([
-                'full_name' => $request->full_name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'role' => $request->role,
-            ]);
-
-            return redirect()->route('admin_user_edit',['id' => $id])->with('success', 'Cập nhật thông tin người dùng thành công!');
-        } catch (\Exception $e) {
-            Log::error('Lỗi khi cập nhật thông tin user', ['error' => $e->getMessage()]);
-            return redirect()->back()->with('error', 'Cập nhật thất bại! Vui lòng thử lại.');
-        }
-    }
-
     public function supplier_list()
     {
-        return view('admin.supplier.supplier_list');
+        return view('staff.supplier.supplier_list');
     }
 
-    public function apiSupplierList()
+    public function destroySupplier($id)
     {
-        $suppliers = Supplier::all();
-        return response()->json($suppliers);
+        $supplier = Supplier::findOrFail($id);
+        $supplier->delete();
+
+        return redirect()->route('staff_supplier_list')->with('success', 'Xóa nhà cung cấp thành công');
     }
 
-    function updateSupplier(Request $request, $id)
+    public function editSupplier($id)
+    {
+        $supplier = Supplier::findOrFail($id);
+        return view('staff.supplier.edit', compact('supplier'));
+    }
+
+    public function updateSupplier(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -441,26 +315,12 @@ class AdminController extends Controller
         $supplier = Supplier::findOrFail($id);
         $supplier->update($request->all());
 
-        return redirect()->route('admin_supplier_edit', $id)->with('success', 'Cập nhật thành công!');
-    }
-
-    public function destroySupplier($id)
-    {
-        $supplier = Supplier::findOrFail($id);
-        $supplier->delete();
-
-        return redirect()->route('admin_supplier_list')->with('success', 'Xóa nhà cung cấp thành công');
-    }
-
-    public function editSupplier($id)
-    {
-        $supplier = Supplier::findOrFail($id);
-        return view('admin.supplier.edit', compact('supplier'));
+        return redirect()->route('staff_supplier_edit', $id)->with('success', 'Cập nhật thành công!');
     }
 
     public function createSupplier()
     {
-        return view('admin.supplier.create_supplier');
+        return view('staff.supplier.create_supplier');
     }
 
     public function storeSupplier(Request $request)
@@ -481,26 +341,12 @@ class AdminController extends Controller
         Supplier::create($request->all());
 
         // Chuyển hướng kèm thông báo thành công
-        return redirect()->route('admin_supplier_add')->with('success', 'Thêm nhà cung cấp thành công!');
+        return redirect()->route('staff_supplier_add')->with('success', 'Thêm nhà cung cấp thành công!');
     }
 
     function orderList()
     {
-        return view('admin.order.order_list');
-    }
-
-    public function getOrders(Request $request)
-    {
-        $status = $request->query('status'); // Lấy chính xác từ query parameter
-
-        $orders = Order::with('user')
-            ->when($status, function ($query, $status) { // Sửa điều kiện
-                return $query->where('order_status', $status);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return response()->json($orders);
+        return view('staff.order.order_list');
     }
 
     public function destroyOrder($id)
@@ -513,39 +359,8 @@ class AdminController extends Controller
 
     public function shipperList()
     {
-        return view('admin.user.shipper_list');
+        return view('staff.user.shipper_list');
     }
-
-    public function getShippersJson(Request $request)
-    {
-        // Lấy trạng thái từ query, mặc định là pending (chờ xác nhận)
-        $status = $request->query('status', 'pending');
-
-        $shippers = User::select('user_id', 'full_name', 'email', 'phone', 'avatar', 'status', 'created_at')
-            ->where('role', 'shipper')
-            ->where('status', $status)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return response()->json($shippers);
-    }
-
-    public function getShipperDetail($user_id)
-    {
-        $shipper = User::where('role', 'shipper')->findOrFail($user_id);
-
-        // Tùy ý lấy thông tin cần thiết
-        return response()->json([
-            'user_id'    => $shipper->user_id,
-            'full_name'  => $shipper->full_name,
-            'email'      => $shipper->email,
-            'phone'      => $shipper->phone,
-            'status'     => $shipper->status,
-            'created_at' => $shipper->created_at,
-            'avatar'     => $shipper->avatar,
-        ]);
-    }
-
 
     public function acceptShipper($shipperId)
     {
@@ -561,5 +376,24 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'Shipper đã được kích hoạt và nhận thông báo.');
     }
 
+    public function show($order_id)
+    {
+        $order = Order::with(['user', 'orderDetails.product'])->findOrFail($order_id);
+        return view('staff.order.show', compact('order'));
+    }
 
+    public function acceptOrder($order_id)
+    {
+        // Lấy đơn hàng theo ID
+        $order = Order::where('order_id', $order_id)->where('order_status', 'pending')->first();
+
+        if (!$order) {
+            return redirect()->back()->with('error', 'Không tìm thấy đơn hàng hoặc đơn hàng không ở trạng thái chờ xác nhận.');
+        }
+
+        // Cập nhật trạng thái đơn hàng thành "processing"
+        $order->update(['order_status' => 'processing']);
+
+        return redirect()->back()->with('success', 'Đơn hàng đã được chấp nhận và đang xử lý.');
+    }
 }

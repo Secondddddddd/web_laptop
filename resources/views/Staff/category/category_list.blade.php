@@ -1,4 +1,4 @@
-@extends('admin.admin_dashboard')
+@extends('staff.staff_dashboard')
 
 @section('title', 'Category List')
 
@@ -8,7 +8,7 @@
 
         <x-alert-result />
 
-        <a href="{{ route('admin_category_add') }}"
+        <a href="{{ route('staff_category_add') }}"
            class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">
             Thêm Thể Loại
         </a>
@@ -40,8 +40,8 @@
                             index + 1,
                             category.name,
                             html(`
-                                <a href="/admin/category/${category.category_id}/edit" class="text-blue-500 hover:underline mr-2">Sửa</a>
-                                <form action="/admin/category/${category.category_id}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
+                                <a href="/staff/category/${category.category_id}/edit" class="text-blue-500 hover:underline mr-2">Sửa</a>
+                                <form action="/staff/category/${category.category_id}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">
                                     <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}">
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700">Xóa</button>

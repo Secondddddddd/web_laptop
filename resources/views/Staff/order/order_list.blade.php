@@ -1,4 +1,4 @@
-@extends('admin.admin_dashboard')
+@extends('staff.staff_dashboard')
 
 @section('title', 'Order List')
 
@@ -68,12 +68,12 @@
                             timeZone: "Asia/Ho_Chi_Minh"
                         }).format(new Date(order.created_at)),
                         html(`
-                    <a href="/admin/orders_detail/${order.order_id}" class="text-blue-500 hover:underline mr-2">Xem chi tiết</a>
-                    <form action="/admin/orders/${order.order_id}/accept" method="POST" style="display:inline;">
+                    <a href="/staff/orders_detail/${order.order_id}" class="text-blue-500 hover:underline mr-2">Xem chi tiết</a>
+                    <form action="/staff/orders/${order.order_id}/accept" method="POST" style="display:inline;">
                         <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')}">
                         <button type="submit" class="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-700">Chấp nhận</button>
                     </form>
-                    <form action="/admin/orders/${order.order_id}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
+                    <form action="/staff/orders/${order.order_id}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">
                         <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')}">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-700">Xóa</button>
