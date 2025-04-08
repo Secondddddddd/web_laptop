@@ -10,6 +10,12 @@ use App\Models\Review;
 
 class ProductController extends Controller
 {
+
+    public function index(){
+        $products = Product::all();
+        return view('home_page', compact('products'));
+    }
+
 public function laptopList(Request $request)
 {
 // Lấy ID của danh mục Laptop

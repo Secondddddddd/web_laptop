@@ -17,7 +17,7 @@
         <!-- Danh sách phụ kiện -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             @forelse ($products as $product)
-                @continue($product->quantity == 0) {{-- Bỏ qua sản phẩm nếu số lượng bằng 0 --}}
+                @continue($product->stock_quantity == 0) {{-- Bỏ qua sản phẩm nếu số lượng bằng 0 --}}
 
                 <div class="border p-4 rounded shadow bg-white flex flex-col items-center">
                     <img src="{{ asset('img/'.$product->image_url) }}"

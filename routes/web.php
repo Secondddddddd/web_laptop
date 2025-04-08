@@ -13,9 +13,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\ShipperOrderController;
 
 
-Route::get('/', function () {
-    return view('home_page');
-})->name('home');
+Route::get('/', [ProductController::class, 'index'])->name('home');
 
 Route::middleware(['auth','role:admin'])->group(function(){
     Route::prefix('admin')->group(function () {
@@ -102,9 +100,8 @@ Route::get('/reset-password', [AuthController::class, 'showResetForm'])->name('p
 Route::post('/reset-password', [AuthController::class, 'updatePassword'])->name('password.update');
 Route::get('/laptops', [ProductController::class, 'laptopList'])->name('laptops');
 Route::get('/accessories', [ProductController::class, 'accessories'])->name('accessories');
-Route::get('/laptops/{product_id}/{product_slug}', [ProductController::class, 'showProductDetail'])->name('product.detail');
-Route::post('/order/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
-Route::post('/laptops/{product_id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+Route::get('/products/{product_id}/{product_slug}', [ProductController::class, 'showProductDetail'])->name('product.detail');
+
 
 
 
@@ -157,6 +154,9 @@ Route::prefix('api')->group(function () {
             Route::post('/processCheckout', [OrderController::class,'ProcessCheckoutCart'])->name('cart.processCheckout');
             Route::post('/update/{id}', [CartController::class, 'updateCart'])->name('cart.update');
         });
+
+        Route::post('/order/buy-now/{product_id}', [OrderController::class, 'buyNow'])->name('order.buy_now');
+        Route::post('/laptops/{product_id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     });
 Route::middleware(['auth', 'role:shipper'])->group(function () {
     Route::get('/shipper/orders', [ShipperOrderController::class, 'index'])->name('shipper.orders');

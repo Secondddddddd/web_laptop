@@ -12,22 +12,22 @@
 
             <div class="mySlides fade">
                 <div class="numberText">1 / 4</div>
-                <a href="#"><img src="{{ asset('img_ads/dell_inspiron_7445.jpg') }}" class="w-full h-96 object-cover rounded-lg"></a>
+                <a href="{{ route('product.detail', ['product_id' => 48, 'product']) }}"><img src="{{ asset('img_ads/dell_inspiron_7445.jpg') }}" class="w-full h-96 object-cover rounded-lg"></a>
             </div>
 
             <div class="mySlides fade">
                 <div class="numberText">2 / 4</div>
-                <a href="#"><img src="{{ asset('img_ads/geekPro.jpg') }}" class="w-full h-96 object-cover rounded-lg"></a>
+                <a href="{{ route('product.detail', ['product_id' => 50, 'product']) }}"><img src="{{ asset('img_ads/geekPro.jpg') }}" class="w-full h-96 object-cover rounded-lg"></a>
             </div>
 
             <div class="mySlides fade">
                 <div class="numberText">3 / 4</div>
-                <a href="#"><img src="{{ asset('img_ads/lenovo_loq.jpg') }}" class="w-full h-96 object-cover rounded-lg"></a>
+                <a href="{{ route('product.detail', ['product_id' => 51, 'product']) }}"><img src="{{ asset('img_ads/lenovo_loq.jpg') }}" class="w-full h-96 object-cover rounded-lg"></a>
             </div>
 
             <div class="mySlides fade">
                 <div class="numberText">4 / 4</div>
-                <a href="#"><img src="{{ asset('img_ads/nitro_v15.jpg') }}" class="w-full h-96 object-cover rounded-lg"></a>
+                <a href="{{ route('product.detail', ['product_id' => 49, 'product']) }}"><img src="{{ asset('img_ads/nitro_v15.jpg') }}" class="w-full h-96 object-cover rounded-lg"></a>
             </div>
 
             <!-- Nút điều hướng -->
@@ -38,8 +38,8 @@
 
         <!-- Hình ảnh bên phải (1/3) -->
         <div class="grid grid-rows-[1fr_1fr] h-96 col-span-1">
-            <a href="#"><img src="{{ asset('img_ads/thinkbook.jpg') }}" class="w-full h-full object-cover rounded-lg shadow-md"></a>
-            <a href="#"><img src="{{ asset('img_ads/xiaoxin_pro16.jpg') }}" class="w-full h-full object-cover rounded-lg shadow-md"></a>
+            <a href="{{ route('product.detail', ['product_id' => 52, 'product']) }}"><img src="{{ asset('img_ads/thinkbook.jpg') }}" class="w-full h-full object-cover rounded-lg shadow-md"></a>
+            <a href="{{ route('product.detail', ['product_id' => 53, 'product']) }}"><img src="{{ asset('img_ads/xiaoxin_pro16.jpg') }}" class="w-full h-full object-cover rounded-lg shadow-md"></a>
         </div>
 
     </div>

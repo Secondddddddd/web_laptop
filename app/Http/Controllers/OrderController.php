@@ -195,7 +195,7 @@ class OrderController extends Controller
 
             // Hoàn trả lại số lượng sản phẩm
             foreach ($order->orderDetails as $detail) {
-                $detail->product->increment('stock_quantity', $detail->quantity);
+                $detail->product->increment('stock_quantity', $detail->stock_quantity);
             }
 
             DB::commit();

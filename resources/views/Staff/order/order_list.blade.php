@@ -116,7 +116,6 @@
                 }
             }
 
-            // Event listener for filter buttons
             document.querySelectorAll(".filter-btn").forEach((button) => {
                 button.addEventListener("click", function () {
                     document.querySelectorAll(".filter-btn").forEach((btn) => {
@@ -125,7 +124,6 @@
                     });
 
                     currentStatus = this.dataset.status;
-                    console.log("Current status changed to:", currentStatus);
 
                     this.classList.add("active");
                     this.classList.remove("btn-outline");
