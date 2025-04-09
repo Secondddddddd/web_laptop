@@ -1,6 +1,7 @@
 @extends('index')
 
 @section('content')
+    <x-alert-result />
         <!-- Danh sách sản phẩm -->
         <div>
             <div class="overflow-x-auto">

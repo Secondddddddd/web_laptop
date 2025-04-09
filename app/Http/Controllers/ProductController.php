@@ -12,8 +12,8 @@ class ProductController extends Controller
 {
 
     public function index(){
-        $products = Product::all();
-        return view('home_page', compact('products'));
+        $laptops = Product::where('category_id',1)->get();
+        return view('home_page', compact('laptops'));
     }
 
 public function laptopList(Request $request)

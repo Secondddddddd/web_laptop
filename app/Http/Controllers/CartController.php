@@ -84,9 +84,9 @@ class CartController extends Controller
             return isset($cart[$id]) ? [$id => $cart[$id]] : [];
         });
 
-        if ($selectedProducts->isEmpty()) {
-            return redirect()->route('user.cart')->with('error', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
-        }
+//        if ($selectedProducts->isEmpty()) {
+//            return redirect()->route('user.cart')->with('error', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
+//        }
 
         $addresses = auth()->user()->addresses ?? [];
         return view('cart.checkoutCart', compact('selectedProducts', 'addresses'));

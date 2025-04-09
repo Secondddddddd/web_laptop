@@ -1,6 +1,9 @@
 @extends('index')
 
 @section('content')
+
+    <x-alert-result />
+
     <form action="{{route('cart.processCheckout')}}" method="POST" class="ml-5">
         @csrf
 

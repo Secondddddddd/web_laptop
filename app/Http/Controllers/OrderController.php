@@ -76,6 +76,7 @@ class OrderController extends Controller
 
     public function ProcessCheckoutCart(Request $request)
     {
+
         if(!$request->input('address_id')){
             return redirect()->route('cart.checkout')->with('error', 'Chưa có địa chỉ giao hàng!');
         }
