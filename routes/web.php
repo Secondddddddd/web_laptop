@@ -117,6 +117,7 @@ Route::prefix('api')->group(function () {
     });
 
     Route::middleware('auth')->group(function () {
+        Route::get('/province', [AddressController::class, 'getProvinces']);
         Route::get('/districts/{province_code}', [AddressController::class, 'getDistricts']);
         Route::get('/wards/{district_code}', [AddressController::class, 'getWards']);
     });

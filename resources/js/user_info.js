@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Khi trang tải, kiểm tra localStorage để hiển thị component đã chọn (nếu có)
-    // const activeComponent = localStorage.getItem("activeComponent") || ;
+    const activeComponent = localStorage.getItem("activeComponent") || active;
     showComponent(active);
 
     // Gán sự kiện cho từng menu item

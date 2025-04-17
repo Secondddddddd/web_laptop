@@ -33,4 +33,7 @@ class UserAddress extends Model
     {
         return $this->belongsTo(Ward::class, 'ward_code', 'code');
     }
+
+    // Hàm lấy địa chỉ mặc định
+
     }

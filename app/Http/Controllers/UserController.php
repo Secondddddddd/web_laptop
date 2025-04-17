@@ -61,7 +61,7 @@ class UserController extends Controller
         ]);
 
         // Chuyển hướng về trang thông tin cá nhân hoặc địa chỉ
-        return redirect()->route('user.info')->with('success', 'Thêm địa chỉ thành công!');
+        return redirect()->route('user.info', ['active' => 'address']);
     }
 
     public function updateInfo(Request $request)

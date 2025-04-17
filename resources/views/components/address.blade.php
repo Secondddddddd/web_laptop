@@ -29,9 +29,14 @@
                         @endif
                     </span>
                     <div class="space-x-2">
-                        <button onclick="deleteAddress({{ $address->id }})" class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
-                            Xóa
-                        </button>
+                        <form id="delete-form-{{ $address->id }}" method="POST" action="{{ route('address.destroy', $address->id) }}" onsubmit="return confirmDelete()">
+                            @csrf
+                            @method('DELETE')
+                            <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
+                                Xóa
+                            </button>
+                        </form>
+
                     </div>
                 </li>
             @endforeach

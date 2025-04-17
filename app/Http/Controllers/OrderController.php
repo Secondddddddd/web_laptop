@@ -16,39 +16,36 @@ class OrderController extends Controller
     function buyNow(Request $request, $product_id){
         $product = Product::findOrFail($product_id);
         $quantity = $request->input('quantity', 1);
-        $addresses = UserAddress::with(['province', 'district', 'ward'])
-            ->where('user_id', auth()->id())
-            ->get();
+        $user = auth()->user();
+        $addresses = $user->addresses ?? [];
 
-        return view('user.checkout', [
-            'product' => $product,
-            'quantity' => $quantity,
-            'addresses' => $addresses,
-        ]);
+        $phone = $user->phone;
+        $addressDefault = $user->defaultAddress() ?? '';
+
+
+        return view('user.checkout', compact('product', 'quantity', 'addresses', 'phone', 'addressDefault'));
     }
 
     public function checkoutSubmitBuyNow(Request $request)
     {
+
         $request->validate([
-            'address_id' => 'required|exists:user_addresses,id',
+            'address' => 'required|string|min:1',
             'payment_method' => 'required|in:cod,banking',
             'product_id' => 'required|exists:products,product_id',
-            'quantity' => 'required|integer|min:1'
+            'quantity' => 'required|integer|min:1',
+            'phone' => ['required', 'regex:/^0\d{9}$/']
         ]);
 
         // Lấy địa chỉ đầy đủ
-        $address = UserAddress::with(['province', 'district', 'ward'])->findOrFail($request->address_id);
-        $fullAddress = $address->address_detail . ', ' .
-            ($address->ward->full_name ?? '') . ', ' .
-            ($address->district->full_name ?? '') . ', ' .
-            ($address->province->full_name ?? '');
+        $fullAddress = $request->input('address');
 
         // Tạo mã OTP ngẫu nhiên (6 số)
         $otp_code = mt_rand(100000, 999999);
 
         // Lấy sản phẩm từ database
         $product = Product::findOrFail($request->product_id);
-        $quantity = $request->quantity;
+        $quantity = $request->input('quantity');
         $unit_price = $product->price;
         $subtotal = $unit_price * $quantity;
 
@@ -57,6 +54,7 @@ class OrderController extends Controller
             'user_id' => auth()->id(),
             'payment_method' => $request->payment_method,
             'address' => $fullAddress,
+            'phone' => $request->input('phone'),
             'otp_code' => $otp_code,
             'order_status' => 'pending',
             'total_price' => $subtotal
@@ -77,16 +75,15 @@ class OrderController extends Controller
     public function ProcessCheckoutCart(Request $request)
     {
 
-        if(!$request->input('address_id')){
+        if(!$request->input('address')){
             return redirect()->route('cart.checkout')->with('error', 'Chưa có địa chỉ giao hàng!');
         }
+        $request->validate([
+            'phone' => ['required', 'regex:/^0\d{9}$/']
+        ]);
 
         $cart = session()->get('cart', []);
-        $address = UserAddress::with(['province', 'district', 'ward'])->findOrFail($request->input('address_id'));
-        $fullAddress = $address->address_detail . ', ' .
-            ($address->ward->full_name ?? '') . ', ' .
-            ($address->district->full_name ?? '') . ', ' .
-            ($address->province->full_name ?? '');
+        $fullAddress = $request->input('address');
 
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Giỏ hàng trống!');
@@ -111,6 +108,7 @@ class OrderController extends Controller
                 'payment_method' => $request->input('payment_method'),
                 'otp_code' => rand(100000, 999999), // Tạo mã OTP ngẫu nhiên
                 'address' => $fullAddress,
+                'phone' => $request->input('phone'),
                 'total_price' => $totalPrice,
                 'order_status' => 'pending'
             ]);

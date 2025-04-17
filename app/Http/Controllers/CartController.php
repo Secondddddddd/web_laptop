@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\UserAddress;
+
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -84,12 +86,13 @@ class CartController extends Controller
             return isset($cart[$id]) ? [$id => $cart[$id]] : [];
         });
 
-//        if ($selectedProducts->isEmpty()) {
-//            return redirect()->route('user.cart')->with('error', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
-//        }
+        $user = auth()->user();
 
-        $addresses = auth()->user()->addresses ?? [];
-        return view('cart.checkoutCart', compact('selectedProducts', 'addresses'));
+        $phone = $user->phone;
+
+        $addresses = $user->addresses ?? [];
+        $addressDefault = $user->defaultAddress() ?? '';
+        return view('cart.checkoutCart', compact('selectedProducts', 'addresses', 'phone', 'addressDefault'));
     }
 
     public function updateCart(Request $request, $id)

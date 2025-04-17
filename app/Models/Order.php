@@ -21,6 +21,7 @@ class Order extends Model
         'payment_method',
         'otp_code',
         'address',
+        'phone',
         'total_price',
         'shipper_id',
         'order_status',

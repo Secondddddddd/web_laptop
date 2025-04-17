@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Province;
 use Illuminate\Http\Request;
 use App\Models\District;
 use App\Models\Ward;
@@ -9,6 +10,13 @@ use App\Models\UserAddress;
 
 class AddressController extends Controller
 {
+
+    public function getProvinces()
+    {
+        $provinces = Province::all();
+        return response()->json($provinces);
+    }
+
     // Lấy danh sách quận/huyện theo tỉnh
     public function getDistricts($province_code)
     {
@@ -42,7 +50,7 @@ class AddressController extends Controller
 
         $address->delete();
 
-        return response()->json(['success' => 'Địa chỉ đã được xóa thành công.']);
+        return redirect()->route('user.info', ['active' => 'address']);
     }
 }
 
